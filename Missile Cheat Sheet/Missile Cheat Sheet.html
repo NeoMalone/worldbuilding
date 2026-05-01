@@ -1,0 +1,3044 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FM-OR/14-Δ — Missile Anatomy & Design Reference</title>
+<link rel="stylesheet" href="cheatsheet.css">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    packages: {'[+]': ['ams']}
+  },
+  chtml: { scale: 0.95 },
+  startup: { typeset: true }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" id="MathJax-script" async></script>
+</head>
+<body>
+
+<div class="page">
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+
+  <!-- Shared SVG defs (patterns / markers) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <pattern id="hatch" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="4" stroke="#1a1410" stroke-width="0.6"/>
+      </pattern>
+      <pattern id="hatch-fine" patternUnits="userSpaceOnUse" width="2.5" height="2.5" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="2.5" stroke="#1a1410" stroke-width="0.4"/>
+      </pattern>
+      <pattern id="dots" patternUnits="userSpaceOnUse" width="3" height="3">
+        <circle cx="1.5" cy="1.5" r="0.4" fill="#1a1410"/>
+      </pattern>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#1a1410"/>
+      </marker>
+      <marker id="arr-faint" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#6b5a44"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <!-- ============ MASTHEAD ============ -->
+  <header class="masthead">
+    <div class="doc-id">
+      <b>FM-OR/14-Δ</b>
+      VOL. I &nbsp;·&nbsp; ED. 7<br>
+      ISSUED: AUREL 04 / 1148 A.F.<br>
+      SUPERSEDES FM-OR/14-Γ
+    </div>
+    <div>
+      <h1>MISSILE ANATOMY, DESIGN<br>&amp; PROPULSION PHYSICS</h1>
+      <small>· A FIELD REFERENCE FOR THE WORKING ORDNANCEWRIGHT ·</small>
+    </div>
+    <div class="stamp">
+      WORLDBUILDING<br>USE ONLY
+      <small>FICTION · § ‡ ·</small>
+    </div>
+    <div class="fineprint" style="grid-column: 1 / -1;">
+      <span>Compiled from open engineering canon. SI units throughout unless noted. Symbols glossary on final folio.</span>
+      <span>Folio I of I &nbsp;·&nbsp; ¶ 1 — 14</span>
+    </div>
+  </header>
+
+  <!-- ============ TOC ============ -->
+    <nav class="toc">
+    <h3>§ TABLE OF CONTENTS — DESIGN-FROM-SCRATCH FLOW</h3>
+    <ol>
+      <li><a href="#s9">Sizing &amp; ΔV — First Principles</a></li>
+      <li><a href="#s12">Flight Environment</a></li>
+      <li><a href="#s10">Aerodynamics</a></li>
+      <li><a href="#s1">Anatomy &amp; Stations</a></li>
+      <li><a href="#s2">Nose-Cone Geometries</a></li>
+    </ol>
+    <ol start="6">
+      <li><a href="#s3">Aerodynamic Surfaces</a></li>
+      <li><a href="#s3b">Wing &amp; Airfoil Design</a></li>
+      <li><a href="#s11">Stability — CoM vs CoP</a></li>
+      <li><a href="#s4">Rocket Propulsion</a></li>
+      <li><a href="#s5">Air-Breathing</a></li>
+      <li><a href="#s6">Exotic &amp; Nuclear</a></li>
+    </ol>
+    <ol start="11">
+      <li><a href="#s7">Combustion Chamber &amp; Nozzle</a></li>
+      <li><a href="#s8">Inlets</a></li>
+      <li><a href="#s14">Staging &amp; ΔV Budget</a></li>
+      <li><a href="#s13">Structural Loads</a></li>
+    </ol>
+    <ol start="15">
+      <li><a href="#s15">Warheads</a></li>
+      <li><a href="#s15b">Submunitions &amp; Dispensers</a></li>
+      <li><a href="#s15c">Shaped-Charge Geometry</a></li>
+      <li><a href="#s15d">CBRN — Dispersion &amp; Scaling</a></li>
+      <li><a href="#s15e">Nuclear — Yield &amp; Effects</a></li>
+      <li><a href="#s16">Guidance &amp; Fuzing</a></li>
+      <li><a href="#s16b">RF, Radar &amp; Seeker Hardware</a></li>
+      <li><a href="#s16c">EW &mdash; ECM / ESM / EMP</a></li>
+      <li><a href="#s17">Symbols Glossary</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ § 9 FUNDAMENTAL EQUATIONS ============ -->
+  <section id="s9">
+    <div class="section-head">
+      <div class="num">§1</div>
+      <h2>Fundamental Equations<small>TSIOLKOVSKY · I<sub>sp</sub> · T/W · ΔV</small></h2>
+      <div class="meta">PLATE 1.0</div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.1 · TSIOLKOVSKY ROCKET EQUATION</div>
+          $$ \Delta V = V_{e}\,\ln\!\frac{m_{0}}{m_{f}} = I_{sp}\,g_{0}\,\ln\!\frac{m_{0}}{m_{f}} $$
+          <div class="eq-where">m₀ initial mass, m<sub>f</sub> final mass after burn. <b>Mass ratio</b> MR = m₀/m<sub>f</sub>. Logarithm is the tyrant: doubling ΔV requires squaring MR.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.2 · SPECIFIC IMPULSE</div>
+          $$ I_{sp}=\frac{F}{\dot m\,g_{0}}=\frac{V_{e}}{g_{0}} $$
+          <div class="eq-where">Seconds. Effective exhaust velocity per unit weight-flow.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.3 · MASS FLOW (CHOKED)</div>
+          $$ \dot m = \frac{P_{c} A^{*}}{\sqrt{T_{c}}}\sqrt{\frac{\gamma}{R/\mathcal M}}\!\left(\frac{2}{\gamma+1}\right)^{\!\frac{\gamma+1}{2(\gamma-1)}} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.4 · THRUST (general)</div>
+          $$ F = \dot m\,V_{e} + (P_{e}-P_{a})A_{e} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.5 · THRUST-TO-WEIGHT RATIO</div>
+          $$ \frac{T}{W} = \frac{F}{m\,g_{0}} $$
+          <div class="eq-where">T/W &gt; 1 to lift off vertically. Tactical missiles: 5–30 at burnout-instant. Cruise missiles: ~1.0 (level flight).</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.6 · BURN TIME</div>
+          $$ t_{b} = \frac{m_{p}}{\dot m} = \frac{m_{p} I_{sp} g_{0}}{F} $$
+        </div>
+      </div>
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.7 · GRAVITY LOSS</div>
+          $$ \Delta V_{g} = \int_{0}^{t_{b}} g(t)\sin\gamma(t)\,dt $$
+          <div class="eq-where">Cost of fighting gravity during ascent. Steep climb &amp; long burn ⇒ big loss. Solid sprint: small. Ion thruster: enormous (so launched in vacuum).</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.8 · DRAG LOSS</div>
+          $$ \Delta V_{d}=\int_{0}^{t_{b}}\frac{D}{m}\,dt $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.9 · NET ΔV</div>
+          $$ \Delta V_{net} = I_{sp}g_{0}\ln(m_{0}/m_{f}) - \Delta V_{g} - \Delta V_{d} - \Delta V_{steer} - \Delta V_{p} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.10 · STAGED ROCKET</div>
+          $$ \Delta V_{tot} = \sum_{i} I_{sp,i}\,g_{0}\,\ln\!\frac{m_{0,i}}{m_{f,i}} $$
+          <div class="eq-where">Each stage's mass ratio is computed against THAT stage only — dropped tankage means a fresh, favorable ratio for the next stage.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.11 · PAYLOAD FRACTION</div>
+          $$ \pi = \frac{m_{pl}}{m_{0}},\quad \lambda=\frac{m_{s}}{m_{0}-m_{pl}} $$
+          <div class="eq-where">π payload fraction; λ structural coefficient. Smaller λ ⇒ more performance.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 9.12 · CHARACTERISTIC VELOCITY</div>
+          $$ c^{*} = \frac{P_{c}A^{*}}{\dot m}\quad\Rightarrow\quad I_{sp}=\frac{C_{F}c^{*}}{g_{0}} $$
+        </div>
+      </div>
+    </div>
+
+    <div class="box note">
+      <div class="box-title">⚑ Sanity Numbers — ΔV BUDGETS</div>
+      <table class="tight">
+        <tbody>
+          <tr><td>SAM intercept (10 km)</td><td>~0.6 km/s</td><td>Cruise missile (1000 km, sea-level)</td><td>~0.3 km/s + sustained thrust</td></tr>
+          <tr><td>ICBM (10 000 km)</td><td>~7 km/s</td><td>LEO insertion</td><td>~9.4 km/s</td></tr>
+          <tr><td>GTO from LEO</td><td>~2.4 km/s</td><td>Lunar transfer</td><td>~3.2 km/s</td></tr>
+          <tr><td>Earth escape</td><td>~3.2 km/s from LEO</td><td>Mars transfer</td><td>~3.6 km/s from LEO</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ § 12 ATMOSPHERE & GRAVITY ============ -->
+  <section id="s12">
+    <div class="section-head">
+      <div class="num">§2</div>
+      <h2>Flight Environment<small>ATMOSPHERE · GRAVITY · DESIGN COUPLING</small></h2>
+      <div class="meta">PLATE 2.0</div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 12.1 · ISOTHERMAL DENSITY (scale-height)</div>
+          $$ \rho(h)=\rho_{0}\,e^{-h/H},\quad H=\frac{R T}{Mg} \approx 8.5\text{ km (Earth)} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 12.2 · STANDARD ATM (TROPOSPHERE)</div>
+          $$ T(h)=T_{0}-Lh,\quad p(h)=p_{0}\!\left(1-\tfrac{Lh}{T_{0}}\right)^{\!\frac{gM}{RL}} $$
+          <div class="eq-where">L ≈ 6.5 K/km lapse, T₀=288.15 K, p₀=101.325 kPa, ρ₀=1.225 kg/m³.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 12.3 · GRAVITY (above surface)</div>
+          $$ g(h) = g_{0}\!\left(\frac{R_{\oplus}}{R_{\oplus}+h}\right)^{2} $$
+          <div class="eq-where">g₀ = 9.806 65 m/s². Drops only ~3% at 100 km.</div>
+        </div>
+        <table class="tight">
+          <thead><tr><th>h (km)</th><th>ρ (kg/m³)</th><th>p (kPa)</th><th>T (K)</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>1.225</td><td>101.3</td><td>288</td></tr>
+            <tr><td>5</td><td>0.736</td><td>54</td><td>256</td></tr>
+            <tr><td>11</td><td>0.364</td><td>22.6</td><td>216</td></tr>
+            <tr><td>20</td><td>0.089</td><td>5.5</td><td>217</td></tr>
+            <tr><td>50</td><td>1.0×10⁻³</td><td>0.08</td><td>271</td></tr>
+            <tr><td>100</td><td>5×10⁻⁷</td><td>3×10⁻⁵</td><td>~200</td></tr>
+            <tr><td>200</td><td>3×10⁻¹⁰</td><td>—</td><td>~850</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Design Couplings</h3>
+        <dl class="keyed">
+          <dt>Low-altitude</dt><dd>high q ⇒ heavy structure, big hinge motors, intense aero-heating, but rich air for breathers.</dd>
+          <dt>High-altitude</dt><dd>low q ⇒ light wings work, but control surfaces lose authority — switch to TVC/RCS.</dd>
+          <dt>Vacuum</dt><dd>only thrust steers; expand nozzle hugely (ε=40–200) to extract every Pa.</dd>
+          <dt>Throttle for gravity</dt><dd>if T/W ≫ 1 you waste ΔV in drag; if T/W ≈ 1 you waste it in gravity. Sweet spot T/W ≈ 1.3–1.6 at lift-off.</dd>
+          <dt>Max-q</dt><dd>climb profile shaped to keep ρV² bounded; airframe designed to that single load case.</dd>
+          <dt>Heating</dt><dd>$\dot q \propto \rho V^{3}$; doubling V is 8× heat. Doubling ρ is 2×.</dd>
+          <dt>Range vs altitude</dt><dd>cruise high (low D) for endurance; sea-skim low (radar shadow) for terminal stealth.</dd>
+        </dl>
+        <div class="box">
+          <div class="box-title">BARROW WIND CORRECTION</div>
+          Cross-wind shifts aim point; missile must "lead" upwind by w·t<sub>flight</sub>/cos(θ). Big factor on long-range artillery rockets.
+        </div>
+        <div class="box dashed">
+          <div class="box-title">GRAVITY-TURN</div>
+          Pitch program where thrust vector remains aligned with velocity; gravity itself rotates trajectory. Minimizes steering loss; standard for ballistic + orbital.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 10 AERODYNAMICS ============ -->
+  <section id="s10">
+    <div class="section-head">
+      <div class="num">§3</div>
+      <h2>Aerodynamics<small>q · LIFT · DRAG · MACH REGIMES</small></h2>
+      <div class="meta">PLATE 3.0</div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 10.1 · DYNAMIC PRESSURE</div>
+          $$ q = \tfrac{1}{2}\rho V^{2} $$
+          <div class="eq-where">Air's "punch" per area. Sets all aero forces, hinge moments, structural loads. Max-q on ascent ≈ 30–35 kPa.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 10.2 · LIFT</div>
+          $$ L = q\,S\,C_{L} = \tfrac{1}{2}\rho V^{2} S\,C_{L} $$
+          <div class="eq-where">S reference area (planform). C<sub>L</sub> grows ≈ linearly with α until stall.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 10.3 · DRAG</div>
+          $$ D = q\,S\,C_{D} = q\,S\,(C_{D_{0}} + C_{D_{i}} + C_{D_{w}}) $$
+          <div class="eq-where">Parasite C<sub>D₀</sub> + induced C<sub>L</sub>²/(πARe) + wave drag (M&gt;~0.8).</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 10.4 · MACH NUMBER</div>
+          $$ M = V/a,\quad a=\sqrt{\gamma R T/\mathcal M} $$
+          <div class="eq-where">Sea-level a ≈ 340 m/s; @ 30 km a ≈ 300 m/s.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 10.5 · REYNOLDS</div>
+          $$ Re = \rho V L_{ref} / \mu $$
+          <div class="eq-where">Sets boundary-layer regime (laminar &lt; 5×10⁵; turbulent &gt;).</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 10.6 · L/D — RANGE</div>
+          $$ R_{cruise}=\frac{V}{c_{T}}\,\frac{L}{D}\,\ln\!\frac{m_{0}}{m_{f}}\quad\text{(Breguet)} $$
+        </div>
+      </div>
+      <div>
+        <h3>Drag Components — Speeds</h3>
+        <table class="tight">
+          <thead><tr><th>Source</th><th>Subsonic</th><th>Trans.</th><th>Super.</th></tr></thead>
+          <tbody>
+            <tr><td>Skin friction</td><td>major</td><td>major</td><td>major</td></tr>
+            <tr><td>Form / pressure</td><td>moderate</td><td>moderate</td><td>—</td></tr>
+            <tr><td>Induced (lift)</td><td>large at low V</td><td>—</td><td>small</td></tr>
+            <tr><td>Wave</td><td>0</td><td>spike</td><td>large</td></tr>
+            <tr><td>Base drag</td><td>—</td><td>—</td><td>large</td></tr>
+          </tbody>
+        </table>
+        <h3>Mach regimes</h3>
+        <dl class="keyed">
+          <dt>M &lt; 0.3</dt><dd>incompressible; ρ ≈ const</dd>
+          <dt>0.3 – 0.8</dt><dd>subsonic compressible</dd>
+          <dt>0.8 – 1.2</dt><dd>transonic — mixed flow, drag rise</dd>
+          <dt>1.2 – 5</dt><dd>supersonic — oblique shocks</dd>
+          <dt>5 – 10</dt><dd>hypersonic — real-gas, dissociation</dd>
+          <dt>&gt; 10</dt><dd>high hypersonic — ionization, plasma sheath</dd>
+        </dl>
+        <div class="box">
+          <div class="box-title">PRANDTL–GLAUERT</div>
+          $$ C_{p} = \frac{C_{p,0}}{\sqrt{1-M^{2}}}\quad (M&lt;1) $$
+          $$ C_{p} = \frac{C_{p,0}}{\sqrt{M^{2}-1}}\quad (M&gt;1) $$
+          Singular at M=1 (drag-divergence).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 1 ANATOMY ============ -->
+  <section id="s1">
+    <div class="section-head">
+      <div class="num">§4</div>
+      <h2>Anatomy &amp; Stations<small>NOSE → TAIL · STATIONS A–H</small></h2>
+      <div class="meta">PLATE 4.0 · 4.1</div>
+    </div>
+
+    <div class="grid-fig-text">
+      <div>
+        <figure class="svg-frame">
+          <svg viewBox="0 0 720 280" preserveAspectRatio="xMidYMid meet">
+            <!-- centerline -->
+            <line class="line-cl" x1="20" y1="155" x2="700" y2="155"/>
+            <!-- outer body: nose (ogive) -->
+            <path class="line" d="M 20 155
+              C 80 155, 130 138, 180 110
+              L 180 200
+              C 130 172, 80 155, 20 155 Z"/>
+            <!-- main body cylinder -->
+            <path class="line" d="M 180 110 L 560 110 L 560 200 L 180 200 Z"/>
+            <!-- boattail -->
+            <path class="line" d="M 560 110 L 620 122 L 620 188 L 560 200 Z"/>
+            <!-- nozzle -->
+            <path class="line" d="M 620 122 L 660 132 L 680 138 L 680 172 L 660 178 L 620 188 Z"/>
+            <path class="line-thin" d="M 640 138 L 670 144 M 640 172 L 670 166"/>
+
+            <!-- internal partitions -->
+            <line class="line-thin" x1="180" y1="110" x2="180" y2="200"/>
+            <line class="line-thin" x1="240" y1="110" x2="240" y2="200"/>
+            <line class="line-thin" x1="320" y1="110" x2="320" y2="200"/>
+            <line class="line-thin" x1="400" y1="110" x2="400" y2="200"/>
+            <line class="line-thin" x1="560" y1="110" x2="560" y2="200"/>
+
+            <!-- seeker dome shading -->
+            <path class="fill-soft" d="M 20 155 C 80 155, 130 138, 180 110 L 180 200 C 130 172, 80 155, 20 155 Z" opacity="0.5"/>
+            <!-- seeker gimbal -->
+            <circle cx="70" cy="155" r="14" class="line-thin" fill="rgba(255,255,255,0.3)"/>
+            <line class="line-thin" x1="56" y1="155" x2="84" y2="155"/>
+            <line class="line-thin" x1="70" y1="141" x2="70" y2="169"/>
+
+            <!-- guidance bay (avionics racks) -->
+            <rect x="188" y="120" width="44" height="14" class="line-thin" fill="rgba(255,255,255,0.2)"/>
+            <rect x="188" y="138" width="44" height="14" class="line-thin" fill="rgba(255,255,255,0.2)"/>
+            <rect x="188" y="158" width="44" height="14" class="line-thin" fill="rgba(255,255,255,0.2)"/>
+            <rect x="188" y="176" width="44" height="14" class="line-thin" fill="rgba(255,255,255,0.2)"/>
+
+            <!-- warhead (shaded) -->
+            <path class="fill-warhead" d="M 248 112 L 312 112 L 318 155 L 312 198 L 248 198 L 244 155 Z"/>
+            <text x="280" y="160" text-anchor="middle" class="lbl-sm">WHD</text>
+
+            <!-- fuze -->
+            <rect x="320" y="146" width="14" height="18" class="hatch"/>
+
+            <!-- fuel/propellant tank with grain pattern -->
+            <rect x="408" y="115" width="148" height="80" class="fill-fuel"/>
+            <line class="line-thin" x1="408" y1="155" x2="556" y2="155" stroke-dasharray="2 3"/>
+            <!-- grain perforation pattern -->
+            <circle cx="440" cy="155" r="10" fill="rgba(241,232,212,0.7)" stroke="#1a1410" stroke-width="0.5"/>
+            <circle cx="475" cy="155" r="10" fill="rgba(241,232,212,0.7)" stroke="#1a1410" stroke-width="0.5"/>
+            <circle cx="510" cy="155" r="10" fill="rgba(241,232,212,0.7)" stroke="#1a1410" stroke-width="0.5"/>
+            <circle cx="545" cy="155" r="10" fill="rgba(241,232,212,0.7)" stroke="#1a1410" stroke-width="0.5"/>
+
+            <!-- canards -->
+            <path class="fill-mid" d="M 215 110 L 240 80 L 250 80 L 232 110 Z"/>
+            <path class="fill-mid" d="M 215 200 L 240 230 L 250 230 L 232 200 Z"/>
+            <!-- main wings (long-span) -->
+            <path class="fill-soft" d="M 360 110 L 470 70 L 500 70 L 410 110 Z"/>
+            <path class="fill-soft" d="M 360 200 L 470 240 L 500 240 L 410 200 Z"/>
+            <!-- tail fins -->
+            <path class="fill-mid" d="M 540 110 L 600 80 L 615 90 L 580 110 Z"/>
+            <path class="fill-mid" d="M 540 200 L 600 230 L 615 220 L 580 200 Z"/>
+            <!-- moving control surface line on tail -->
+            <line class="line-thin" x1="585" y1="84" x2="600" y2="98"/>
+            <line class="line-thin" x1="585" y1="226" x2="600" y2="212"/>
+
+            <!-- station leaders -->
+            <g class="leader">
+              <line x1="70"  y1="50"  x2="70"  y2="138"/>
+              <line x1="210" y1="50"  x2="210" y2="118"/>
+              <line x1="280" y1="50"  x2="280" y2="110"/>
+              <line x1="327" y1="50"  x2="327" y2="144"/>
+              <line x1="430" y1="50"  x2="430" y2="113"/>
+              <line x1="480" y1="58"  x2="480" y2="85"/>
+              <line x1="595" y1="252" x2="595" y2="226"/>
+              <line x1="650" y1="252" x2="650" y2="155"/>
+            </g>
+            <g class="lbl">
+              <text x="70"  y="44" text-anchor="middle">A · SEEKER</text>
+              <text x="210" y="44" text-anchor="middle">B · GUIDANCE</text>
+              <text x="280" y="44" text-anchor="middle">C · WARHEAD</text>
+              <text x="327" y="44" text-anchor="middle">D · FUZE</text>
+              <text x="430" y="44" text-anchor="middle">E · MOTOR</text>
+              <text x="480" y="52" text-anchor="middle">F · WING</text>
+              <text x="595" y="266" text-anchor="middle">G · TAIL FIN</text>
+              <text x="650" y="266" text-anchor="middle">H · NOZZLE</text>
+            </g>
+
+            <!-- length dim -->
+            <line class="line-thin" x1="20"  y1="244" x2="680" y2="244" marker-start="url(#arr-rev)" marker-end="url(#arr)"/>
+            <text x="350" y="260" class="dim" text-anchor="middle">OVERALL LENGTH  L</text>
+          </svg>
+          <figcaption>FIG. 1.0 — General arrangement, axial cutaway. Stations A–H are convention-only; real airframes pack functions tightly and rarely respect tidy partitions.</figcaption>
+        </figure>
+      </div>
+
+      <div>
+        <h3>Functional Sections</h3>
+        <dl class="keyed">
+          <dt>A · Seeker</dt><dd>Forward sensor module behind the radome / IR dome. Houses gimballed antenna or optics, gyros, signal pre-amps. Drives the homing loop.</dd>
+          <dt>B · Guidance &amp; Avionics</dt><dd>Autopilot, IMU, computer, datalink, mission timer, battery (thermal or Li). Translates seeker error into fin commands.</dd>
+          <dt>C · Warhead</dt><dd>Payload section: HE/frag, shaped charge, penetrator, sub-munitions, or inert. Forward of motor to maximize kill geometry.</dd>
+          <dt>D · Fuze &amp; S&amp;A</dt><dd>Safe-and-Arm device + initiation logic. Two independent environmental cues required to arm (e.g. setback + spin).</dd>
+          <dt>E · Motor / Tankage</dt><dd>Solid grain, liquid bipropellant tanks, or air-breathing combustor. The single largest mass and volume fraction.</dd>
+          <dt>F · Wing</dt><dd>Lift surface for cruise and pull-up; fixed or folding. Sometimes absent (purely thrust-vector or fin-borne).</dd>
+          <dt>G · Tail / Empennage</dt><dd>Stabilizers + control surfaces (rudder/elevator/elevon). Furthest aft to maximize moment arm about CoM.</dd>
+          <dt>H · Nozzle / Exhaust</dt><dd>Convergent-divergent (rocket) or simple convergent (subsonic jet). Optional thrust-vector vanes / gimbal.</dd>
+          <dt>+ Skin &amp; Frame</dt><dd>Monocoque or semi-monocoque tube — bears bending, axial thrust, hoop pressure, aero-heating. Materials: aluminum, steel, titanium, composite, ablative liner.</dd>
+          <dt>+ Umbilicals</dt><dd>Lugs, launch shoes, ejection rails, fill/drain ports, arming pull-pin. Removed/severed at launch.</dd>
+        </dl>
+
+        <div class="box note">
+          <div class="box-title">⚑ Layout Heuristic</div>
+          Heavy items (warhead, motor case) ride near the center of mass to keep pitch/yaw inertia low. Sensors lead, propellant fills the middle, exhaust trails. CoM should sit ahead of CoP — see §11.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 2 NOSE CONES ============ -->
+  <section id="s2">
+    <div class="section-head">
+      <div class="num">§5</div>
+      <h2>Nose-Cone Geometries<small>PROFILES · GENERATING FUNCTIONS · REGIME</small></h2>
+      <div class="meta">PLATE 5.0 — 5.6</div>
+    </div>
+
+    <p>Every profile maps a station <em>x ∈ [0, L]</em> along the cone axis to a local radius <em>y(x)</em>, where <em>R</em> is the base radius and <em>L</em> the cone length. <b>Fineness ratio</b> <em>f = L / 2R</em> is the single most important shape parameter — high f reduces wave drag at supersonic speed; low f yields a blunt cone that survives heating.</p>
+
+    <div class="grid-3">
+      <!-- 2.1 Cone -->
+      <figure class="svg-frame">
+        <svg viewBox="0 0 220 110">
+          <line class="line-cl" x1="10" y1="60" x2="210" y2="60"/>
+          <path class="line" d="M 10 60 L 200 20 L 200 100 Z"/>
+          <text x="110" y="14" class="lbl" text-anchor="middle">CONE</text>
+          <text x="110" y="106" class="dim" text-anchor="middle">y = R · x / L</text>
+        </svg>
+        <figcaption>FIG 2.1 — Sharp circular cone. Simplest, easiest to machine.</figcaption>
+      </figure>
+
+      <figure class="svg-frame">
+        <svg viewBox="0 0 220 110">
+          <line class="line-cl" x1="10" y1="60" x2="210" y2="60"/>
+          <path class="line" d="M 10 60
+            Q 80 22, 200 20
+            L 200 100
+            Q 80 98, 10 60 Z"/>
+          <text x="110" y="14" class="lbl" text-anchor="middle">TANGENT OGIVE</text>
+          <text x="110" y="106" class="dim" text-anchor="middle">circular arc, tangent at base</text>
+        </svg>
+        <figcaption>FIG 2.2 — Tangent ogive. Default workhorse profile for medium supersonic.</figcaption>
+      </figure>
+
+      <figure class="svg-frame">
+        <svg viewBox="0 0 220 110">
+          <line class="line-cl" x1="10" y1="60" x2="210" y2="60"/>
+          <path class="line" d="M 10 60
+            Q 60 28, 200 20
+            L 200 100
+            Q 60 92, 10 60 Z"/>
+          <text x="110" y="14" class="lbl" text-anchor="middle">SECANT OGIVE</text>
+          <text x="110" y="106" class="dim" text-anchor="middle">arc, NOT tangent at base</text>
+        </svg>
+        <figcaption>FIG 2.3 — Secant ogive (ρ &gt; tangent ρ). Lower drag than tangent for some f.</figcaption>
+      </figure>
+
+      <figure class="svg-frame">
+        <svg viewBox="0 0 220 110">
+          <line class="line-cl" x1="10" y1="60" x2="210" y2="60"/>
+          <path class="line" d="M 10 60
+            C 30 60, 90 24, 200 20
+            L 200 100
+            C 90 96, 30 60, 10 60 Z"/>
+          <text x="110" y="14" class="lbl" text-anchor="middle">ELLIPTICAL</text>
+          <text x="110" y="106" class="dim" text-anchor="middle">y = R√(1 − (1−x/L)²)</text>
+        </svg>
+        <figcaption>FIG 2.4 — Half-ellipsoid. Blunt, smooth — best for subsonic.</figcaption>
+      </figure>
+
+      <figure class="svg-frame">
+        <svg viewBox="0 0 220 110">
+          <line class="line-cl" x1="10" y1="60" x2="210" y2="60"/>
+          <path class="line" d="M 10 60
+            C 25 50, 80 30, 200 22
+            L 200 98
+            C 80 90, 25 70, 10 60 Z"/>
+          <text x="110" y="14" class="lbl" text-anchor="middle">HAACK / VON KÁRMÁN</text>
+          <text x="110" y="106" class="dim" text-anchor="middle">drag-minimizing series</text>
+        </svg>
+        <figcaption>FIG 2.5 — Sears–Haack &amp; Kármán. Computed minimum-wave-drag shapes.</figcaption>
+      </figure>
+
+      <figure class="svg-frame">
+        <svg viewBox="0 0 220 110">
+          <line class="line-cl" x1="10" y1="60" x2="210" y2="60"/>
+          <path class="line" d="M 10 60
+            C 35 56, 70 32, 200 22
+            L 200 98
+            C 70 88, 35 64, 10 60 Z"/>
+          <text x="110" y="14" class="lbl" text-anchor="middle">POWER · y = R(x/L)ⁿ</text>
+          <text x="110" y="106" class="dim" text-anchor="middle">n: ½ paraboloid · ¾ blunt · 1 cone</text>
+        </svg>
+        <figcaption>FIG 2.6 — Power series. Tunable bluntness via exponent n.</figcaption>
+      </figure>
+    </div>
+
+    <div class="grid-12-1">
+      <div>
+        <h3>Generating Functions — Reference</h3>
+        <p class="margin-note">Convention: <em>x</em> is distance from tip, <em>L</em> total cone length, <em>R</em> base radius, <em>y(x)</em> the local body-of-revolution radius. All shapes share <em>y(0)=0, y(L)=R</em>.</p>
+
+        <h4>Conical</h4>
+        <div class="eq">
+          <div class="eq-label">EQ 2.1 · CONE</div>
+          $$ y(x) = \frac{R\,x}{L} \qquad \tan\theta = R/L $$
+          <div class="eq-where">Half-angle θ. Drag dominated by leading-shock losses; sharp tip survives only at low Mach or with ablative coating.</div>
+        </div>
+
+        <h4>Tangent Ogive</h4>
+        <div class="eq">
+          <div class="eq-label">EQ 2.2 · TANGENT OGIVE</div>
+          $$ \rho = \frac{R^2 + L^2}{2R} $$
+          $$ y(x) = \sqrt{\rho^2 - (L-x)^2} \;-\; (\rho - R) $$
+          <div class="eq-where">ρ is ogive radius; arc tangent to body at the shoulder. Minimum-drag cone-to-cylinder for ~M 1–3 with finesse f ≈ 3–5.</div>
+        </div>
+
+        <h4>Secant Ogive</h4>
+        <div class="eq">
+          <div class="eq-label">EQ 2.3 · SECANT OGIVE</div>
+          $$ y(x)=\sqrt{\rho^2-(L-x)^2}\;-\;\sqrt{\rho^2-L^2} $$
+          <div class="eq-where">User picks ρ &gt; ρ<sub>tangent</sub>. Arc meets the cylinder at a discontinuous angle (the "shoulder").</div>
+        </div>
+
+        <h4>Elliptical</h4>
+        <div class="eq">
+          <div class="eq-label">EQ 2.4 · ELLIPSOIDAL</div>
+          $$ y(x) = R\sqrt{1 - \left(1-\dfrac{x}{L}\right)^2} $$
+          <div class="eq-where">Round-nosed, blunt. Best subsonic L/D; poor wave-drag performance.</div>
+        </div>
+
+        <h4>Parabolic</h4>
+        <div class="eq">
+          <div class="eq-label">EQ 2.5 · PARABOLIC SERIES</div>
+          $$ y(x)=R\left[\frac{2(x/L) - K(x/L)^2}{2-K}\right],\ \ K\in[0,1] $$
+          <div class="eq-where">K = 0 cone, K = 1 full parabola. Mid-supersonic compromise.</div>
+        </div>
+
+        <h4>Power Series</h4>
+        <div class="eq">
+          <div class="eq-label">EQ 2.6 · POWER</div>
+          $$ y(x)=R\left(\dfrac{x}{L}\right)^{n} $$
+          <div class="eq-where">n = 0 cylinder · ½ paraboloid · ¾ ¾-blunt · 1 cone. n = ¾ approximates a heat-shielded re-entry body.</div>
+        </div>
+
+        <h4>Haack Series &amp; Von Kármán</h4>
+        <div class="eq">
+          <div class="eq-label">EQ 2.7 · HAACK</div>
+          $$ \theta(x) = \arccos\!\left(1-\frac{2x}{L}\right) $$
+          $$ y(x) = \frac{R}{\sqrt{\pi}}\sqrt{\theta - \tfrac{1}{2}\sin 2\theta + C\sin^{3}\theta} $$
+          <div class="eq-where">C = 0 → <b>LD-Haack / Von Kármán</b>: minimum drag for given length &amp; volume. C = ⅓ → LV-Haack: minimum drag for given length &amp; <em>diameter</em>.</div>
+        </div>
+
+        <h4>Sears–Haack</h4>
+        <div class="eq">
+          <div class="eq-label">EQ 2.8 · SEARS–HAACK BODY</div>
+          $$ y(x) = R\left[4\frac{x}{L}\!\left(1-\frac{x}{L}\right)\right]^{3/4} $$
+          <div class="eq-where">Closed body of revolution; theoretical minimum wave drag for fixed length &amp; volume. Used as a benchmark.</div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Selection — by Regime</h3>
+        <table class="tight">
+          <thead><tr><th>Regime</th><th>Pick</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>M &lt; 0.8 (subsonic)</td><td>Elliptical, ¾-power</td><td>Pressure drag dominated by separation — round nose minimizes it.</td></tr>
+            <tr><td>M 0.8 – 1.2 (transonic)</td><td>Von Kármán, secant ogive</td><td>Wave drag rising fast; minimum-drag bodies pay off.</td></tr>
+            <tr><td>M 1.2 – 5 (supersonic)</td><td>Tangent/secant ogive, Von Kármán</td><td>Slender shock cone; f ≥ 3 desirable.</td></tr>
+            <tr><td>M &gt; 5 (hypersonic)</td><td>Blunt sphere-cone, ¾-power</td><td>Bluntness pushes the bow shock off the surface → standoff cools the skin.</td></tr>
+            <tr><td>Re-entry</td><td>Sphere-cone, biconic</td><td>Heat flux ∝ 1/√R<sub>n</sub>; blunt nose <b>reduces</b> peak heating.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="box">
+          <div class="box-title">FINENESS RATIO</div>
+          $$ f = L/(2R) $$
+          <ul class="tight">
+            <li>f &lt; 2 — blunt; high drag, robust</li>
+            <li>f ≈ 3–5 — supersonic sweet spot</li>
+            <li>f &gt; 5 — slender; vulnerable to bending; costly volume</li>
+          </ul>
+        </div>
+
+        <div class="box dashed">
+          <div class="box-title">RADOME / SEEKER NOTE</div>
+          A seeker imposes a <b>blunted</b> tip (spherical cap radius R<sub>n</sub>) on whatever profile you pick. Common scheme: ogive body + ~5–10% R<sub>n</sub>/R cap, faired smoothly. Materials: pyroceram, fused silica, ZnS for IR, alumina for radar.
+        </div>
+
+        <div class="box note">
+          <div class="box-title">⚠ Heating</div>
+          Stagnation heat flux at the nose tip:
+          $$ \dot q_{s} \;\propto\; \frac{1}{\sqrt{R_{n}}}\,\rho^{1/2} V^{3} $$
+          Doubling tip radius cuts peak heating by √2. Pointy noses melt; blunt noses survive.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 3 AERO SURFACES ============ -->
+  <section id="s3">
+    <div class="section-head">
+      <div class="num">§6</div>
+      <h2>Aerodynamic Surfaces<small>WINGS · FINS · STRAKES · CANARDS · CONTROLS</small></h2>
+      <div class="meta">PLATE 6.0 — 6.4</div>
+    </div>
+
+    <div class="grid-fig-text">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 720 280">
+          <line class="line-cl" x1="20" y1="140" x2="700" y2="140"/>
+          <path class="line" d="M 20 140 C 70 140, 110 124, 150 110 L 660 110 L 680 120 L 680 160 L 660 170 L 150 170 C 110 156, 70 140, 20 140 Z"/>
+          <path class="fill-mid" d="M 175 110 L 200 78 L 222 78 L 210 110 Z"/>
+          <path class="fill-mid" d="M 175 170 L 200 202 L 222 202 L 210 170 Z"/>
+          <text x="200" y="70" class="lbl-sm" text-anchor="middle">CANARD</text>
+          <path class="fill-soft" d="M 230 110 L 360 102 L 360 110 Z"/>
+          <path class="fill-soft" d="M 230 170 L 360 178 L 360 170 Z"/>
+          <text x="295" y="98" class="lbl-sm" text-anchor="middle">STRAKE / LERX</text>
+          <path class="fill-soft" d="M 330 110 L 470 50 L 540 50 L 410 110 Z"/>
+          <path class="fill-soft" d="M 330 170 L 470 230 L 540 230 L 410 170 Z"/>
+          <text x="455" y="44" class="lbl-sm" text-anchor="middle">WING</text>
+          <path class="fill-mid" d="M 580 110 L 660 70 L 680 80 L 615 110 Z"/>
+          <path class="line-thin" d="M 660 70 L 680 80 L 660 92 Z" fill="rgba(160,40,24,0.18)"/>
+          <path class="fill-mid" d="M 580 170 L 660 210 L 680 200 L 615 170 Z"/>
+          <path class="line-thin" d="M 660 210 L 680 200 L 660 188 Z" fill="rgba(160,40,24,0.18)"/>
+          <text x="670" y="62" class="lbl-sm" text-anchor="middle">TAIL + ELEVON</text>
+          <g class="arrow-faint">
+            <line x1="0" y1="40" x2="40" y2="40"/>
+            <line x1="0" y1="140" x2="40" y2="140"/>
+            <line x1="0" y1="240" x2="40" y2="240"/>
+          </g>
+          <text x="20" y="32" class="lbl-sm" text-anchor="middle">V∞</text>
+        </svg>
+        <figcaption>FIG 3.0 — Surface families. Canards, strakes, main wing, tail + control flap.</figcaption>
+      </figure>
+      <div>
+        <h3>Family Definitions</h3>
+        <dl class="keyed">
+          <dt>Wing</dt><dd>Primary lift surface, mid-body. Fixed or folding. Cruciform (×4) or planar (×2).</dd>
+          <dt>Fin / Stabilizer</dt><dd>Smaller surface aft of CoM. Contributes mostly to <em>stability</em>, not lift.</dd>
+          <dt>Strake / LERX</dt><dd>Long, low-AR leading-edge extension. Generates a <b>vortex</b> at high α, delaying stall.</dd>
+          <dt>Canard</dt><dd>Small surface <em>forward</em> of CoM. Pitch/yaw control; can destabilize for agility.</dd>
+          <dt>Control Surface</dt><dd>Movable subset: rudder (yaw), elevator (pitch), aileron (roll), elevon (pitch+roll), ruddervator (V-tail).</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h3>Configurations</h3>
+        <table class="tight">
+          <thead><tr><th>Layout</th><th>Lift Surf.</th><th>Control</th><th>Char.</th></tr></thead>
+          <tbody>
+            <tr><td><b>Tail-controlled</b></td><td>Wing/strake</td><td>Tail fins</td><td>Stable, classical, slowest pitch.</td></tr>
+            <tr><td><b>Canard-controlled</b></td><td>Mid wing</td><td>Canards</td><td>Fast pitch, roll coupling at high α.</td></tr>
+            <tr><td><b>Wing-controlled</b></td><td>—</td><td>Mid wings</td><td>Strong moment, airframe pitches little.</td></tr>
+            <tr><td><b>Tailless</b></td><td>Body+strake</td><td>Tail only</td><td>Compact, supersonic friendly.</td></tr>
+            <tr><td><b>TVC-only</b></td><td>—</td><td>Nozzle vanes</td><td>No air; vacuum &amp; high-α capable.</td></tr>
+          </tbody>
+        </table>
+        <h3>Planform Geometry</h3>
+        <dl class="keyed">
+          <dt>Span b</dt><dd>tip-to-tip</dd>
+          <dt>Root cᵣ / Tip cₜ</dt><dd>chord at root / outboard</dd>
+          <dt>Taper λ</dt><dd>cₜ/cᵣ</dd>
+          <dt>Sweep Λ</dt><dd>angle of leading edge</dd>
+          <dt>MAC</dt><dd>$\bar c = \tfrac{2}{3} c_r \tfrac{1+\lambda+\lambda^2}{1+\lambda}$</dd>
+          <dt>Aspect ratio</dt><dd>$AR = b^{2}/S$</dd>
+        </dl>
+      </div>
+      <div>
+        <h3>Lift &amp; Sweep</h3>
+        <div class="eq">
+          <div class="eq-label">EQ 3.1 · LIFT-CURVE SLOPE</div>
+          $$ C_{L\alpha} \approx \frac{2\pi\,AR}{2 + \sqrt{AR^{2}\beta^{2}/\eta^{2} + 4}} $$
+          <div class="eq-where">β² = |1−M²|. Higher AR ⇒ more lift per α, more induced drag.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 3.2 · INDUCED DRAG</div>
+          $$ C_{D,i} = \frac{C_{L}^{2}}{\pi\,AR\,e} $$
+          <div class="eq-where">e ≈ 0.7–0.95 Oswald efficiency.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 3.3 · SWEEP / CRITICAL MACH</div>
+          $$ M_{\perp} = M_\infty \cos\Lambda $$
+          <div class="eq-where">45–60° sweep typical on supersonic weapons.</div>
+        </div>
+        <div class="box">
+          <div class="box-title">HINGE MOMENT</div>
+          $$ M_{\delta} = q_{\infty}\,S_{c}\,c_{c}\,C_{m\delta} $$
+          High q (low alt., high V) ⇒ huge actuator loads.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 11 STABILITY ============ -->
+  <section id="s11">
+    <div class="section-head">
+      <div class="num">§7</div>
+      <h2>Stability — CoM vs CoP<small>STATIC MARGIN · WEATHERCOCKING</small></h2>
+      <div class="meta">PLATE 7.0</div>
+    </div>
+
+    <div class="grid-fig-text">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 600 200">
+          <line class="line-cl" x1="20" y1="100" x2="580" y2="100"/>
+          <path class="line" d="M 20 100 C 70 100, 110 86, 150 78 L 480 78 L 510 88 L 510 112 L 480 122 L 150 122 C 110 114, 70 100, 20 100 Z"/>
+          <!-- wing -->
+          <path class="fill-soft" d="M 230 78 L 320 50 L 360 50 L 290 78 Z"/>
+          <path class="fill-soft" d="M 230 122 L 320 150 L 360 150 L 290 122 Z"/>
+          <!-- tail -->
+          <path class="fill-mid" d="M 440 78 L 500 60 L 510 64 L 470 78 Z"/>
+          <path class="fill-mid" d="M 440 122 L 500 140 L 510 136 L 470 122 Z"/>
+          <!-- CoM -->
+          <g transform="translate(265,100)">
+            <circle r="9" fill="#f1e8d4" stroke="#1a1410" stroke-width="1"/>
+            <path d="M 0 -9 A 9 9 0 0 1 9 0 L 0 0 Z" fill="#1a1410"/>
+            <path d="M 0 9 A 9 9 0 0 1 -9 0 L 0 0 Z" fill="#1a1410"/>
+          </g>
+          <text x="265" y="86" class="lbl-sm" text-anchor="middle">CoM</text>
+          <!-- CoP -->
+          <g transform="translate(360,100)">
+            <circle r="8" fill="rgba(160,40,24,0.3)" stroke="#a02818" stroke-width="1.4"/>
+            <line x1="-6" y1="0" x2="6" y2="0" stroke="#a02818" stroke-width="1"/>
+            <line x1="0" y1="-6" x2="0" y2="6" stroke="#a02818" stroke-width="1"/>
+          </g>
+          <text x="360" y="86" class="lbl-sm" text-anchor="middle" fill="#a02818">CoP</text>
+          <!-- static margin -->
+          <line class="line-thin" x1="265" y1="170" x2="360" y2="170" marker-start="url(#arr-rev)" marker-end="url(#arr)"/>
+          <text x="312" y="184" class="dim" text-anchor="middle">STATIC MARGIN</text>
+          <!-- α arrow -->
+          <g class="arrow"><line x1="0" y1="120" x2="22" y2="103"/></g>
+          <text x="6" y="138" class="lbl-sm">V∞ at α</text>
+        </svg>
+        <figcaption>FIG 11.0 — Stable arrangement: CoP aft of CoM. A perturbation in α generates a restoring moment.</figcaption>
+      </figure>
+      <div>
+        <h3>Definitions</h3>
+        <dl class="keyed">
+          <dt>CoM (CG)</dt><dd>centroid of mass distribution. Migrates aft as propellant burns (solid: forward; liquid: depends on tank layout).</dd>
+          <dt>CoP</dt><dd>point on the body where the resultant aero force acts. Migrates with α and Mach.</dd>
+          <dt>Static margin</dt><dd>$ SM = (x_{CoP}-x_{CoM})/d $ — in body diameters. Positive → stable.</dd>
+          <dt>Dynamic stability</dt><dd>damping of pitch oscillation. Even a static-stable airframe can be dynamically unstable (limit-cycle).</dd>
+        </dl>
+        <div class="eq">
+          <div class="eq-label">EQ 11.1 · PITCH STIFFNESS</div>
+          $$ C_{m\alpha} = -\frac{x_{CoP}-x_{CoM}}{\bar c}\,C_{N\alpha} $$
+          <div class="eq-where">Negative C<sub>mα</sub> ⇒ stable. Trim α set by C<sub>m0</sub>/C<sub>mα</sub>.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 11.2 · NATURAL FREQ.</div>
+          $$ \omega_{n} = \sqrt{\frac{-q\,S\,\bar c\,C_{m\alpha}}{I_{yy}}} $$
+        </div>
+        <div class="box note">
+          <div class="box-title">⚑ DESIGN RULES</div>
+          <ul class="tight">
+            <li>SM 1.0–2.0 cal: stable, sluggish</li>
+            <li>SM 0.3–0.8 cal: agile, requires good autopilot</li>
+            <li>SM &lt; 0 (relaxed/neutral): hyper-agile; <b>computer-flown only</b>; canard-controlled fighters &amp; AAMs</li>
+            <li>Barrowman method estimates CoP from fin/body planform integrals — useful for hand sizing</li>
+            <li>Spin-stabilized rounds are inherently unstable in pitch but gyroscopically stiff</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 3β WING & AIRFOIL DESIGN ============ -->
+  <section id="s3b">
+    <div class="section-head">
+      <div class="num">§6β</div>
+      <h2>Wing &amp; Airfoil Design<small>PLANFORM · AIRFOIL · SWEEP · TWIST · CONTROL</small></h2>
+      <div class="meta">PLATE 6β.0 — 6β.4</div>
+    </div>
+
+    <p class="margin-note">A wing is a planform + an airfoil + a twist distribution + a structural set of spars and ribs. Each choice is dictated by Mach regime, mission q, and required L/D. This folio gives the geometric vocabulary and the first-order math.</p>
+
+    <h3>Planform Vocabulary</h3>
+    <div class="grid-2">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 540 220">
+          <line class="line-cl" x1="20" y1="40" x2="520" y2="40"/>
+          <!-- straight rectangular -->
+          <g transform="translate(20,60)">
+            <rect x="0" y="0" width="120" height="36" class="line" fill="rgba(60,40,20,0.10)"/>
+            <text x="60" y="58" class="lbl-sm" text-anchor="middle">RECTANGULAR</text>
+          </g>
+          <!-- tapered -->
+          <g transform="translate(170,60)">
+            <path class="line" d="M 0 0 L 110 8 L 100 28 L 0 36 Z" fill="rgba(60,40,20,0.10)"/>
+            <text x="55" y="58" class="lbl-sm" text-anchor="middle">TAPERED</text>
+          </g>
+          <!-- swept -->
+          <g transform="translate(310,55)">
+            <path class="line" d="M 0 0 L 100 30 L 110 44 L 60 44 Z" fill="rgba(60,40,20,0.10)"/>
+            <text x="60" y="62" class="lbl-sm" text-anchor="middle">SWEPT</text>
+          </g>
+          <!-- delta -->
+          <g transform="translate(440,55)">
+            <path class="line" d="M 0 50 L 70 0 L 70 50 Z" fill="rgba(60,40,20,0.10)"/>
+            <text x="35" y="68" class="lbl-sm" text-anchor="middle">DELTA</text>
+          </g>
+          <!-- compound / cropped delta -->
+          <g transform="translate(20,150)">
+            <path class="line" d="M 0 50 L 60 0 L 100 0 L 100 50 Z" fill="rgba(60,40,20,0.10)"/>
+            <text x="50" y="68" class="lbl-sm" text-anchor="middle">CROPPED DELTA</text>
+          </g>
+          <!-- ogive / double delta -->
+          <g transform="translate(170,150)">
+            <path class="line" d="M 0 50 L 40 20 L 70 0 L 110 0 L 110 50 Z" fill="rgba(60,40,20,0.10)"/>
+            <text x="55" y="68" class="lbl-sm" text-anchor="middle">DOUBLE DELTA</text>
+          </g>
+          <!-- diamond / lozenge -->
+          <g transform="translate(310,150)">
+            <path class="line" d="M 0 25 L 55 0 L 110 25 L 55 50 Z" fill="rgba(60,40,20,0.10)"/>
+            <text x="55" y="68" class="lbl-sm" text-anchor="middle">DIAMOND / WAVERIDER</text>
+          </g>
+          <!-- variable / forward swept -->
+          <g transform="translate(440,150)">
+            <path class="line" d="M 0 0 L 70 20 L 60 38 L 0 50 Z" fill="rgba(60,40,20,0.10)"/>
+            <text x="35" y="68" class="lbl-sm" text-anchor="middle">FWD-SWEPT</text>
+          </g>
+        </svg>
+        <figcaption>FIG 6β.0 — Common planforms; each suits a Mach regime: rectangular &amp; tapered &lt; M 0.7; swept M 0.7–2; delta/cropped/double delta M 1–4; diamond/waverider M 5+; forward-swept transonic agility.</figcaption>
+      </figure>
+      <div>
+        <h3>Geometry &amp; Definitions</h3>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.1 · ASPECT RATIO</div>
+          $$ AR = \frac{b^{2}}{S} $$
+          <div class="eq-where">b span, S area. High AR → low induced drag. Missile wings: AR 1–4 typical.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.2 · TAPER &amp; MAC</div>
+          $$ \lambda = c_{t}/c_{r},\quad \overline{c}=\tfrac{2}{3}c_{r}\frac{1+\lambda+\lambda^{2}}{1+\lambda} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.3 · SWEEP TRANSFORM</div>
+          $$ M_{n}=M\cos\Lambda_{LE},\quad C_{L\alpha,sw}=\frac{C_{L\alpha,2D}\cos\Lambda}{\sqrt{1-(M\cos\Lambda)^{2}}} $$
+          <div class="eq-where">Sweep delays critical-Mach effects; pay with reduced lift slope.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.4 · INDUCED-DRAG</div>
+          $$ C_{D_{i}} = \frac{C_{L}^{2}}{\pi\,AR\,e},\quad e\approx 0.7\text{–}0.95 $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.5 · FINITE-WING LIFT SLOPE</div>
+          $$ C_{L\alpha} = \frac{2\pi\,AR}{2+\sqrt{4+AR^{2}\beta^{2}/k^{2}}},\;\beta=\sqrt{|1-M^{2}|} $$
+        </div>
+      </div>
+    </div>
+
+    <h3>Airfoil Sections</h3>
+    <div class="grid-3">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 120">
+          <line class="line-cl" x1="10" y1="60" x2="250" y2="60"/>
+          <!-- biconvex -->
+          <path class="line" d="M 30 60 Q 130 25, 230 60 Q 130 95, 30 60 Z" fill="rgba(60,40,20,0.10)"/>
+          <line class="line-thin" stroke-dasharray="2 2" x1="30" y1="60" x2="230" y2="60"/>
+          <text x="130" y="20" class="lbl-sm" text-anchor="middle">BICONVEX (symmetric)</text>
+          <text x="130" y="112" class="lbl-sm" text-anchor="middle">good Mach 1.5–4</text>
+        </svg>
+        <figcaption>FIG 6β.1 — Biconvex / symmetric. Used for control fins; zero lift at α=0.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 120">
+          <line class="line-cl" x1="10" y1="60" x2="250" y2="60"/>
+          <!-- double-wedge / diamond -->
+          <path class="line" d="M 30 60 L 130 30 L 230 60 L 130 90 Z" fill="rgba(60,40,20,0.10)"/>
+          <text x="130" y="20" class="lbl-sm" text-anchor="middle">DOUBLE-WEDGE</text>
+          <text x="130" y="112" class="lbl-sm" text-anchor="middle">M &gt; 2 supersonic</text>
+        </svg>
+        <figcaption>FIG 6β.2 — Diamond / double-wedge. Sharp LE/TE; predictable shock pattern.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 120">
+          <line class="line-cl" x1="10" y1="60" x2="250" y2="60"/>
+          <!-- cambered subsonic NACA-ish -->
+          <path class="line" d="M 30 60 C 60 35, 140 30, 200 50 Q 230 55, 230 60 Q 200 70, 140 70 C 80 72, 50 70, 30 60 Z" fill="rgba(60,40,20,0.10)"/>
+          <text x="130" y="20" class="lbl-sm" text-anchor="middle">CAMBERED (subsonic)</text>
+          <text x="130" y="112" class="lbl-sm" text-anchor="middle">cruise M &lt; 0.8</text>
+        </svg>
+        <figcaption>FIG 6β.3 — Cambered subsonic. High C<sub>L,max</sub>; rounded LE delays separation.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 120">
+          <line class="line-cl" x1="10" y1="60" x2="250" y2="60"/>
+          <!-- supercritical -->
+          <path class="line" d="M 30 60 C 60 38, 150 38, 200 50 L 230 58 L 230 62 Q 180 80, 100 70 C 60 65, 35 62, 30 60 Z" fill="rgba(60,40,20,0.10)"/>
+          <text x="130" y="20" class="lbl-sm" text-anchor="middle">SUPERCRITICAL</text>
+          <text x="130" y="112" class="lbl-sm" text-anchor="middle">transonic 0.75–0.95</text>
+        </svg>
+        <figcaption>FIG 6β.4 — Supercritical. Flat upper, cambered TE — delays shock; low wave drag.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 120">
+          <line class="line-cl" x1="10" y1="60" x2="250" y2="60"/>
+          <!-- wedge -->
+          <path class="line" d="M 30 60 L 230 35 L 230 60 Z" fill="rgba(60,40,20,0.10)"/>
+          <text x="130" y="20" class="lbl-sm" text-anchor="middle">SINGLE WEDGE</text>
+          <text x="130" y="112" class="lbl-sm" text-anchor="middle">hypersonic / waverider</text>
+        </svg>
+        <figcaption>FIG 6β.5 — Wedge. Compression-lift; basis for waveriders at M 5+.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 120">
+          <line class="line-cl" x1="10" y1="60" x2="250" y2="60"/>
+          <!-- circular arc -->
+          <path class="line" d="M 30 60 Q 130 30, 230 60 L 30 60 Z" fill="rgba(60,40,20,0.10)"/>
+          <text x="130" y="20" class="lbl-sm" text-anchor="middle">CIRCULAR-ARC</text>
+          <text x="130" y="112" class="lbl-sm" text-anchor="middle">simple, transonic</text>
+        </svg>
+        <figcaption>FIG 6β.6 — Circular-arc. Easy to manufacture; flight-test workhorse.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Airfoil Equations</h3>
+    <div class="grid-2">
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.6 · 2-D LIFT SLOPE (thin airfoil)</div>
+          $$ C_{l\alpha} = 2\pi\;[\text{rad}^{-1}] \quad(\text{incompressible}) $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.7 · PRANDTL-GLAUERT (subsonic)</div>
+          $$ C_{p}=\frac{C_{p,0}}{\sqrt{1-M^{2}}} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.8 · ACKERET (supersonic)</div>
+          $$ C_{l}=\frac{4\alpha}{\sqrt{M^{2}-1}},\;C_{d,wave}=\frac{4\alpha^{2}+K(t/c)^{2}}{\sqrt{M^{2}-1}} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.9 · CRITICAL MACH</div>
+          $$ M_{cr}: C_{p,min}=\frac{2}{\gamma M^{2}}\!\left[\!\left(\frac{1+\frac{\gamma-1}{2}M^{2}}{1+\frac{\gamma-1}{2}}\right)^{\!\gamma/(\gamma-1)}\!-1\right] $$
+        </div>
+      </div>
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.10 · REYNOLDS @ MAC</div>
+          $$ Re_{\overline{c}} = \frac{\rho V \overline{c}}{\mu} $$
+          <div class="eq-where">Tipping points: 5×10⁵ (laminar→turbulent on smooth airfoil); 10⁷ skin-drag scaling kicks in.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.11 · STALL ANGLE</div>
+          $$ \alpha_{stall}\approx 12°\text{–}18°\;(\text{cambered, subsonic}) $$
+          <div class="eq-where">Sharp-LE supersonic sections stall &gt; 30° but with leading-edge vortex (delta wings).</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.12 · WASHOUT (twist)</div>
+          $$ \varepsilon(y) = \varepsilon_{r} - (\varepsilon_{r}-\varepsilon_{t})\,(2y/b) $$
+          <div class="eq-where">Negative twist at tip (wash-out) keeps tips unstalled; preserves roll authority near stall.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 6β.13 · DIHEDRAL EFFECT</div>
+          $$ C_{l\beta} \propto -\Gamma\;(\text{rolling moment / sideslip}) $$
+          <div class="eq-where">Γ &gt; 0 stabilises in roll. Anhedral (Γ &lt; 0) destabilises — used when sweep is so high roll-stability is excessive.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Control Surfaces &amp; Hinges</h3>
+    <div class="grid-2">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 540 200">
+          <line class="line-cl" x1="20" y1="100" x2="520" y2="100"/>
+          <!-- aileron -->
+          <g transform="translate(20,40)">
+            <path class="line" d="M 0 30 L 120 18 L 120 42 L 0 54 Z" fill="rgba(60,40,20,0.10)"/>
+            <line class="line-thin" stroke-dasharray="2 2" x1="80" y1="22" x2="80" y2="50"/>
+            <path class="line" d="M 80 22 L 120 18 L 120 42 L 80 50 Z" fill="rgba(160,40,24,0.10)"/>
+            <text x="60" y="80" class="lbl-sm" text-anchor="middle">AILERON</text>
+          </g>
+          <!-- elevon -->
+          <g transform="translate(160,40)">
+            <path class="line" d="M 0 50 L 80 5 L 120 5 L 120 50 Z" fill="rgba(60,40,20,0.10)"/>
+            <path class="line" d="M 60 30 L 120 30 L 120 50 L 70 50 Z" fill="rgba(160,40,24,0.10)"/>
+            <text x="60" y="80" class="lbl-sm" text-anchor="middle">ELEVON (delta)</text>
+          </g>
+          <!-- ruddervator -->
+          <g transform="translate(310,40)">
+            <path class="line" d="M 30 50 L 60 5 L 90 50 Z" fill="rgba(60,40,20,0.10)"/>
+            <path class="line" d="M 60 5 L 75 25 L 90 50 L 60 50 Z" fill="rgba(160,40,24,0.10)"/>
+            <text x="60" y="80" class="lbl-sm" text-anchor="middle">RUDDERVATOR (V-tail)</text>
+          </g>
+          <!-- all-moving fin -->
+          <g transform="translate(450,40)">
+            <path class="line" d="M 0 50 L 30 5 L 60 50 Z" fill="rgba(160,40,24,0.10)"/>
+            <circle cx="30" cy="35" r="3" class="fill-deep"/>
+            <text x="30" y="80" class="lbl-sm" text-anchor="middle">ALL-MOVING</text>
+          </g>
+          <!-- TVC pair -->
+          <g transform="translate(20,140)">
+            <text x="0" y="0" class="lbl-sm">TYPICAL ROLES:</text>
+            <text x="0" y="14" class="dim">aileron — roll · elevon — pitch+roll · ruddervator — pitch+yaw · all-moving — high-Mach hinge moment</text>
+          </g>
+        </svg>
+        <figcaption>FIG 6β.7 — Control-surface families. All-moving (slab) fins favored when conventional flap-hinge moments exceed actuator capacity (high-q, high-Mach).</figcaption>
+      </figure>
+      <div>
+        <h4>Hinge-moment scaling</h4>
+        <div class="eq">
+          $$ H = q\,S_{f}\,\overline{c_{f}}\,C_{H}(\delta,\alpha) $$
+          <div class="eq-where">H roughly ∝ q · area · chord. Doubles per Mach across transonic; sets actuator size.</div>
+        </div>
+        <h4>Selection cheat</h4>
+        <table class="tight">
+          <thead><tr><th>Regime</th><th>Surface</th></tr></thead>
+          <tbody>
+            <tr><td>M &lt; 0.8 cruise</td><td>Cambered airfoil + flap-hinge ailerons/elevators</td></tr>
+            <tr><td>M 0.9–1.2 transonic</td><td>Supercritical or thin biconvex; all-moving preferred</td></tr>
+            <tr><td>M 1.5–4 supersonic</td><td>Double-wedge/diamond; all-moving slab fins</td></tr>
+            <tr><td>M 5+ hypersonic</td><td>Wedge/waverider lifting body; reaction-jets supplement</td></tr>
+            <tr><td>Endo-/exo-atmospheric</td><td>Combined fins + thrusters / TVC</td></tr>
+          </tbody>
+        </table>
+        <div class="box note">
+          <div class="box-title">⚑ STRUCTURAL FIRST-PASS</div>
+          Wing root bending moment scales as M<sub>r</sub> ≈ ½ · n · W · b/2 with load factor n. Thickness ratio (t/c) drives spar height — picking t/c=4% for low wave drag costs you ~½ the bending stiffness of a 6% wing.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 4 PROPULSION SOLID/LIQUID ============ -->
+  <section id="s4">
+    <div class="section-head">
+      <div class="num">§8</div>
+      <h2>Propulsion — Rocket<small>SOLID · LIQUID · HYBRID</small></h2>
+      <div class="meta">PLATE 8.0 — 8.4</div>
+    </div>
+
+    <div class="grid-2">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 360 160">
+          <line class="line-cl" x1="10" y1="80" x2="350" y2="80"/>
+          <path class="line" d="M 20 50 L 270 50 L 290 60 L 310 65 L 310 95 L 290 100 L 270 110 L 20 110 Z"/>
+          <!-- igniter -->
+          <rect x="26" y="68" width="14" height="24" class="hatch"/>
+          <text x="33" y="46" class="lbl-sm" text-anchor="middle">IGN</text>
+          <!-- grain (star perforation) -->
+          <rect x="50" y="55" width="210" height="50" class="fill-fuel"/>
+          <path class="line-thin" fill="rgba(241,232,212,0.85)" d="M 155 80
+            l 10 -3 l 3 -10 l 3 10 l 10 3 l -10 3 l -3 10 l -3 -10 z"/>
+          <text x="155" y="46" class="lbl-sm" text-anchor="middle">GRAIN (star perf.)</text>
+          <!-- liner / case -->
+          <line class="line-thin" x1="50" y1="55" x2="50" y2="105"/>
+          <line class="line-thin" x1="260" y1="55" x2="260" y2="105"/>
+          <text x="290" y="46" class="lbl-sm" text-anchor="middle">NOZZLE</text>
+        </svg>
+        <figcaption>FIG 4.0 — Solid rocket motor. Case-bonded grain; combustion proceeds radially outward from perforation.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 360 160">
+          <line class="line-cl" x1="10" y1="80" x2="350" y2="80"/>
+          <path class="line" d="M 20 40 L 240 40 L 240 120 L 20 120 Z"/>
+          <line class="line-thin" x1="130" y1="40" x2="130" y2="120"/>
+          <rect x="22" y="42" width="106" height="76" class="fill-fuel"/>
+          <rect x="132" y="42" width="106" height="76" class="fill-ox"/>
+          <text x="75" y="84" class="lbl-sm" text-anchor="middle">FUEL</text>
+          <text x="185" y="84" class="lbl-sm" text-anchor="middle">OX</text>
+          <!-- turbopumps -->
+          <circle cx="258" cy="65" r="10" class="line-thin" fill="rgba(255,255,255,0.3)"/>
+          <circle cx="258" cy="95" r="10" class="line-thin" fill="rgba(255,255,255,0.3)"/>
+          <text x="258" y="40" class="lbl-sm" text-anchor="middle">TURBOPUMPS</text>
+          <!-- chamber -->
+          <path class="line" d="M 280 60 L 305 60 L 320 70 L 335 75 L 335 85 L 320 90 L 305 100 L 280 100 Z"/>
+          <text x="307" y="120" class="lbl-sm" text-anchor="middle">Pc · Tc</text>
+          <!-- feed lines -->
+          <line class="line-thin" x1="240" y1="55" x2="258" y2="55"/>
+          <line class="line-thin" x1="240" y1="105" x2="258" y2="105"/>
+          <line class="line-thin" x1="268" y1="65" x2="280" y2="68"/>
+          <line class="line-thin" x1="268" y1="95" x2="280" y2="92"/>
+        </svg>
+        <figcaption>FIG 4.1 — Liquid bipropellant. Pumped (turbopump) or pressure-fed; throttle &amp; restart possible.</figcaption>
+      </figure>
+    </div>
+
+    <div class="grid-3">
+      <div>
+        <h3>Solid</h3>
+        <ul class="tight">
+          <li><b>Pros</b>: simple, storable, instant-on, robust</li>
+          <li><b>Cons</b>: no throttle/shutoff, lower I<sub>sp</sub>, fixed thrust profile</li>
+          <li><b>I<sub>sp</sub></b>: 220 – 280 s (vac)</li>
+          <li><b>Ox/Fuel</b>: AP/HTPB, AP/Al/HTPB, double-base (NC/NG)</li>
+        </ul>
+        <h4>Grain Geometries</h4>
+        <ul class="tight">
+          <li><b>End-burner</b>: low constant thrust, long burn</li>
+          <li><b>Cylindrical port</b>: progressive (rising thrust)</li>
+          <li><b>Star</b>: neutral (~constant)</li>
+          <li><b>Wagon-wheel / dog-bone</b>: high initial, regressive</li>
+          <li><b>Finocyl</b>: neutral, high volumetric loading</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Liquid</h3>
+        <ul class="tight">
+          <li><b>Pros</b>: high I<sub>sp</sub>, throttle, restart, deep TVC</li>
+          <li><b>Cons</b>: tanks, plumbing, cryogenics, hours to fuel</li>
+          <li><b>I<sub>sp</sub></b>: 280 – 460 s (vac)</li>
+        </ul>
+        <h4>Common pairings</h4>
+        <table class="tight">
+          <tbody>
+            <tr><td>LOX / RP-1</td><td>~340 s</td></tr>
+            <tr><td>LOX / LH₂</td><td>~450 s</td></tr>
+            <tr><td>LOX / CH₄</td><td>~360 s</td></tr>
+            <tr><td>N₂O₄ / UDMH (storable)</td><td>~310 s</td></tr>
+            <tr><td>H₂O₂ / Kerosene</td><td>~290 s</td></tr>
+          </tbody>
+        </table>
+        <h4>Cycles</h4>
+        <ul class="tight">
+          <li>Pressure-fed · Gas-generator · Staged combustion · Expander · Full-flow</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Hybrid</h3>
+        <ul class="tight">
+          <li>Solid fuel grain + liquid/gas oxidizer</li>
+          <li>Throttleable, safer than solid; lower density-impulse</li>
+          <li><b>I<sub>sp</sub></b>: 250 – 330 s</li>
+          <li>Common: HTPB + N₂O / LOX</li>
+        </ul>
+        <h3>Cold-Gas / Monoprop</h3>
+        <ul class="tight">
+          <li><b>Cold-gas</b>: N₂, He; I<sub>sp</sub> 50–80 s. Attitude only.</li>
+          <li><b>Monoprop</b>: hydrazine on catalyst bed; I<sub>sp</sub> ~230 s. Divert/ACS.</li>
+        </ul>
+        <h3>Boost / Sustain</h3>
+        <ul class="tight">
+          <li>Two-grain solid: high-thrust boost, low-thrust sustain — extends powered range.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 5 AIR-BREATHING ============ -->
+  <section id="s5">
+    <div class="section-head">
+      <div class="num">§9</div>
+      <h2>Air-Breathing Propulsion<small>TURBOJET · TURBOFAN · RAMJET · SCRAMJET · PDE</small></h2>
+      <div class="meta">PLATE 9.0 — 9.3</div>
+    </div>
+
+    <div class="grid-2">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 480 160">
+          <line class="line-cl" x1="10" y1="80" x2="470" y2="80"/>
+          <!-- inlet -->
+          <path class="line" d="M 20 60 L 90 50 L 90 110 L 20 100 Z"/>
+          <!-- compressor -->
+          <rect x="92" y="50" width="80" height="60" class="fill-mid"/>
+          <g class="line-thin">
+            <line x1="100" y1="50" x2="100" y2="110"/>
+            <line x1="115" y1="50" x2="115" y2="110"/>
+            <line x1="130" y1="50" x2="130" y2="110"/>
+            <line x1="145" y1="50" x2="145" y2="110"/>
+            <line x1="160" y1="50" x2="160" y2="110"/>
+          </g>
+          <text x="132" y="44" class="lbl-sm" text-anchor="middle">COMPRESSOR</text>
+          <!-- combustor -->
+          <rect x="172" y="55" width="100" height="50" class="fill-fuel"/>
+          <text x="222" y="44" class="lbl-sm" text-anchor="middle">COMBUSTOR</text>
+          <!-- turbine -->
+          <rect x="272" y="50" width="50" height="60" class="fill-mid"/>
+          <g class="line-thin">
+            <line x1="282" y1="50" x2="282" y2="110"/>
+            <line x1="297" y1="50" x2="297" y2="110"/>
+            <line x1="312" y1="50" x2="312" y2="110"/>
+          </g>
+          <text x="297" y="44" class="lbl-sm" text-anchor="middle">TURBINE</text>
+          <!-- nozzle -->
+          <path class="line" d="M 322 50 L 460 60 L 460 100 L 322 110 Z"/>
+          <text x="395" y="44" class="lbl-sm" text-anchor="middle">NOZZLE</text>
+          <!-- shaft -->
+          <line class="line-dashed" x1="92" y1="80" x2="322" y2="80"/>
+        </svg>
+        <figcaption>FIG 5.0 — Turbojet. Compressor and turbine on common shaft; high specific thrust at M 0.8–2.5.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 480 160">
+          <line class="line-cl" x1="10" y1="80" x2="470" y2="80"/>
+          <!-- inlet (with central spike) -->
+          <path class="line" d="M 20 50 L 140 60 L 140 100 L 20 110 Z"/>
+          <path class="fill-deep" d="M 20 80 L 90 73 L 90 87 Z"/>
+          <text x="60" y="44" class="lbl-sm" text-anchor="middle">INLET (compresses)</text>
+          <!-- combustor -->
+          <rect x="140" y="55" width="200" height="50" class="fill-fuel"/>
+          <g class="line-thin">
+            <line x1="160" y1="60" x2="170" y2="100"/>
+            <line x1="200" y1="60" x2="210" y2="100"/>
+            <line x1="240" y1="60" x2="250" y2="100"/>
+            <line x1="280" y1="60" x2="290" y2="100"/>
+          </g>
+          <text x="240" y="44" class="lbl-sm" text-anchor="middle">COMBUSTOR (no rotating parts)</text>
+          <!-- nozzle -->
+          <path class="line" d="M 340 55 L 460 65 L 460 95 L 340 105 Z"/>
+          <text x="400" y="44" class="lbl-sm" text-anchor="middle">NOZZLE</text>
+        </svg>
+        <figcaption>FIG 5.1 — Ramjet / scramjet. No turbomachinery — relies on forward speed for compression. Needs M ≳ 2 to start.</figcaption>
+      </figure>
+    </div>
+
+    <table class="tight">
+      <thead><tr><th>Type</th><th>Mach Range</th><th>I<sub>sp</sub> (s)</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><b>Turbojet</b></td><td>0 – 3</td><td>2 000 – 4 000</td><td>Compressor + turbine. Used on cruise missiles (Tomahawk, Storm Shadow).</td></tr>
+        <tr><td><b>Turbofan</b></td><td>0 – 0.95</td><td>4 000 – 8 000</td><td>Bypass air ⇒ best subsonic efficiency &amp; range. Long-loiter weapons.</td></tr>
+        <tr><td><b>Turboprop / -shaft</b></td><td>0 – 0.7</td><td>9 000+</td><td>Endurance/loiter munitions, drones.</td></tr>
+        <tr><td><b>Ramjet</b></td><td>2 – 5</td><td>1 000 – 1 500</td><td>Subsonic combustion. Needs booster to start. Meteor, BrahMos.</td></tr>
+        <tr><td><b>Scramjet</b></td><td>5 – 15</td><td>800 – 1 200</td><td>Supersonic combustion in core. X-51, hypersonic glide-vehicle boosters.</td></tr>
+        <tr><td><b>Ducted-rocket</b><br>(integral rocket-ramjet)</td><td>2 – 4</td><td>~700 – 900</td><td>Solid fuel-rich grain → afterburns in ramjet duct. Compact.</td></tr>
+        <tr><td><b>Pulsejet</b></td><td>0 – 0.6</td><td>1 500</td><td>Valved or valveless; loud, low-cost. V-1 era.</td></tr>
+        <tr><td><b>Pulse Detonation Engine</b></td><td>0 – 4</td><td>theor. high</td><td>Detonation rather than deflagration. Experimental.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ § 6 EXOTIC ============ -->
+  <section id="s6">
+    <div class="section-head">
+      <div class="num">§10</div>
+      <h2>Exotic &amp; Nuclear<small>NTR · NEP · ELECTRIC · SOLAR · LIGHT-SAIL</small></h2>
+      <div class="meta">PLATE 10.0</div>
+    </div>
+    <div class="grid-3">
+      <!-- NTR -->
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 140">
+          <line class="line-cl" x1="10" y1="70" x2="250" y2="70"/>
+          <!-- H2 tank -->
+          <path class="line" d="M 18 50 L 70 50 L 70 90 L 18 90 Z"/>
+          <text x="44" y="74" class="lbl-sm" text-anchor="middle">H₂</text>
+          <!-- reactor core -->
+          <rect x="80" y="46" width="80" height="48" class="fill-deep"/>
+          <g class="line-thin">
+            <line x1="92" y1="46" x2="92" y2="94"/>
+            <line x1="106" y1="46" x2="106" y2="94"/>
+            <line x1="120" y1="46" x2="120" y2="94"/>
+            <line x1="134" y1="46" x2="134" y2="94"/>
+            <line x1="148" y1="46" x2="148" y2="94"/>
+          </g>
+          <!-- radiation symbol -->
+          <g transform="translate(120,70)">
+            <circle r="6" fill="rgba(160,40,24,0.4)" stroke="#a02818" stroke-width="0.8"/>
+            <path d="M 0 0 L 5 -5 L 6 -2 Z M 0 0 L 5 5 L 2 6 Z M 0 0 L -7 0 L -5 -3 Z" fill="#a02818"/>
+          </g>
+          <text x="120" y="40" class="lbl-sm" text-anchor="middle">FISSION CORE</text>
+          <!-- nozzle -->
+          <path class="line" d="M 160 50 L 200 60 L 240 50 L 240 90 L 200 80 L 160 90 Z"/>
+          <line class="line-thin" x1="76" y1="68" x2="80" y2="68"/>
+          <line class="line-thin" x1="76" y1="72" x2="80" y2="72"/>
+          <text x="44" y="44" class="lbl-sm" text-anchor="middle">PROPELLANT</text>
+        </svg>
+        <figcaption>FIG 6.1 — <b>NTR</b> · H₂ heated by fission core, expanded through CD nozzle. I<sub>sp</sub> 800–1000 s, T/W &lt; 1.</figcaption>
+      </figure>
+
+      <!-- Orion pulse -->
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 140">
+          <line class="line-cl" x1="10" y1="70" x2="250" y2="70"/>
+          <!-- vehicle body forward -->
+          <path class="line" d="M 30 50 C 60 50, 100 60, 130 60 L 130 80 C 100 80, 60 90, 30 90 Z"/>
+          <!-- shock absorbers -->
+          <g class="line-thin" stroke-dasharray="2 1.5">
+            <path d="M 130 62 L 142 62 M 130 78 L 142 78"/>
+            <path d="M 130 66 L 142 66 M 130 74 L 142 74"/>
+          </g>
+          <!-- pusher plate -->
+          <path class="fill-deep" d="M 142 44 L 158 50 L 158 90 L 142 96 Z"/>
+          <text x="80" y="44" class="lbl-sm" text-anchor="middle">VEHICLE</text>
+          <text x="150" y="36" class="lbl-sm" text-anchor="middle">PLATE</text>
+          <!-- detonation charges (sequence) -->
+          <g>
+            <circle cx="180" cy="70" r="6" fill="rgba(160,40,24,0.5)" stroke="#a02818"/>
+            <circle cx="180" cy="70" r="11" fill="none" stroke="#a02818" stroke-width="0.6" stroke-dasharray="2 2"/>
+            <circle cx="210" cy="70" r="3" fill="rgba(160,40,24,0.3)" stroke="#a02818" stroke-width="0.6"/>
+            <circle cx="232" cy="70" r="2" fill="none" stroke="#a02818" stroke-width="0.5"/>
+          </g>
+          <text x="180" y="108" class="lbl-sm" text-anchor="middle">CHARGES</text>
+          <!-- thrust direction -->
+          <g class="arrow"><line x1="40" y1="120" x2="20" y2="120"/></g>
+          <text x="60" y="124" class="lbl-sm">v</text>
+        </svg>
+        <figcaption>FIG 6.2 — <b>Nuclear Pulse (Orion)</b> · Sequenced rear-detonations, pusher plate + shocks. I<sub>sp</sub> 10⁴–10⁶ s.</figcaption>
+      </figure>
+
+      <!-- NEP -->
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 140">
+          <line class="line-cl" x1="10" y1="70" x2="250" y2="70"/>
+          <!-- reactor -->
+          <rect x="20" y="55" width="34" height="30" class="fill-deep"/>
+          <text x="37" y="48" class="lbl-sm" text-anchor="middle">RX</text>
+          <!-- radiator fins -->
+          <g class="line-thin">
+            <line x1="20" y1="55" x2="6" y2="40"/>
+            <line x1="54" y1="55" x2="68" y2="40"/>
+            <line x1="20" y1="85" x2="6" y2="100"/>
+            <line x1="54" y1="85" x2="68" y2="100"/>
+          </g>
+          <!-- power line -->
+          <path class="line-dashed" d="M 54 70 L 100 70"/>
+          <!-- thruster grid -->
+          <rect x="100" y="56" width="60" height="28" class="fill-mid"/>
+          <g class="line-thin">
+            <line x1="115" y1="56" x2="115" y2="84"/>
+            <line x1="130" y1="56" x2="130" y2="84"/>
+            <line x1="145" y1="56" x2="145" y2="84"/>
+          </g>
+          <text x="130" y="48" class="lbl-sm" text-anchor="middle">ION GRID</text>
+          <!-- ion beam -->
+          <g stroke="#a02818" stroke-width="0.6" fill="none">
+            <line x1="160" y1="62" x2="240" y2="60"/>
+            <line x1="160" y1="66" x2="240" y2="65"/>
+            <line x1="160" y1="70" x2="240" y2="70"/>
+            <line x1="160" y1="74" x2="240" y2="75"/>
+            <line x1="160" y1="78" x2="240" y2="80"/>
+          </g>
+          <text x="210" y="100" class="lbl-sm" text-anchor="middle">Xe⁺ BEAM</text>
+        </svg>
+        <figcaption>FIG 6.3 — <b>NEP / Ion</b> · Reactor → power → grid accelerates Xe⁺. I<sub>sp</sub> 3 000–10 000 s, T/W ≪ 1.</figcaption>
+      </figure>
+
+      <!-- Electric (Hall/MPD detail) -->
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 140">
+          <!-- annular Hall thruster cross-section -->
+          <line class="line-cl" x1="10" y1="70" x2="250" y2="70"/>
+          <path class="line" d="M 30 35 L 130 35 L 150 45 L 150 60 L 130 60 L 130 80 L 150 80 L 150 95 L 130 105 L 30 105 Z"/>
+          <path class="line" d="M 60 50 L 110 50 L 110 90 L 60 90 Z" fill="rgba(60,40,20,0.18)"/>
+          <text x="85" y="74" class="lbl-sm" text-anchor="middle">B-FIELD</text>
+          <!-- magnetic field arcs -->
+          <g class="line-thin" fill="none" stroke="#1a1410" stroke-dasharray="1.5 1.5">
+            <path d="M 60 50 Q 50 70, 60 90"/>
+            <path d="M 110 50 Q 120 70, 110 90"/>
+          </g>
+          <!-- exhaust -->
+          <g stroke="#a02818" stroke-width="0.6" fill="none">
+            <line x1="150" y1="50" x2="240" y2="48"/>
+            <line x1="150" y1="60" x2="240" y2="58"/>
+            <line x1="150" y1="80" x2="240" y2="82"/>
+            <line x1="150" y1="90" x2="240" y2="92"/>
+          </g>
+          <text x="200" y="40" class="lbl-sm" text-anchor="middle">PLASMA</text>
+          <text x="40" y="28" class="lbl-sm">ANODE</text>
+          <text x="40" y="120" class="lbl-sm">CATHODE</text>
+        </svg>
+        <figcaption>FIG 6.4 — <b>Hall / MPD</b> · Crossed E×B accelerate ionized propellant. Thrust ~mN; vacuum only.</figcaption>
+      </figure>
+
+      <!-- Solar thermal -->
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 140">
+          <line class="line-cl" x1="10" y1="70" x2="250" y2="70"/>
+          <!-- sun rays -->
+          <g stroke="#a02818" stroke-width="0.6" fill="none" marker-end="url(#arr-faint)">
+            <line x1="20" y1="20" x2="60" y2="50"/>
+            <line x1="40" y1="14" x2="70" y2="50"/>
+            <line x1="60" y1="10" x2="80" y2="50"/>
+            <line x1="20" y1="120" x2="60" y2="90"/>
+            <line x1="40" y1="126" x2="70" y2="90"/>
+            <line x1="60" y1="130" x2="80" y2="90"/>
+          </g>
+          <!-- parabolic concentrator -->
+          <path class="line" d="M 60 30 Q 100 70, 60 110"/>
+          <path class="line-thin" d="M 64 36 Q 96 70, 64 104" stroke-dasharray="1 1.5"/>
+          <!-- focus / absorber -->
+          <circle cx="120" cy="70" r="6" class="fill-warhead"/>
+          <text x="120" y="58" class="lbl-sm" text-anchor="middle">FOCUS</text>
+          <!-- heat exchanger -->
+          <rect x="135" y="60" width="40" height="20" class="fill-deep"/>
+          <text x="155" y="74" class="lbl-sm" text-anchor="middle" fill="#f1e8d4">HX</text>
+          <!-- nozzle -->
+          <path class="line" d="M 175 56 L 210 64 L 240 56 L 240 84 L 210 76 L 175 84 Z"/>
+          <!-- H2 line -->
+          <path class="line-thin" d="M 100 110 L 145 110 L 145 80"/>
+          <text x="100" y="122" class="lbl-sm">H₂</text>
+        </svg>
+        <figcaption>FIG 6.5 — <b>Solar Thermal</b> · Mirror concentrates sunlight on absorber heating H₂. I<sub>sp</sub> ~750 s.</figcaption>
+      </figure>
+
+      <!-- Light sail -->
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 140">
+          <!-- photon source -->
+          <g stroke="#a02818" stroke-width="0.7" fill="none" marker-end="url(#arr-faint)">
+            <line x1="10" y1="40" x2="120" y2="48"/>
+            <line x1="10" y1="55" x2="120" y2="60"/>
+            <line x1="10" y1="70" x2="120" y2="70"/>
+            <line x1="10" y1="85" x2="120" y2="80"/>
+            <line x1="10" y1="100" x2="120" y2="92"/>
+          </g>
+          <text x="20" y="22" class="lbl-sm">PHOTONS</text>
+          <text x="20" y="32" class="lbl-sm">(laser/sun)</text>
+          <!-- sail -->
+          <path class="line" d="M 130 30 L 150 35 L 150 105 L 130 110 Z" fill="rgba(241,232,212,0.9)"/>
+          <path class="line-thin" d="M 130 30 L 130 110"/>
+          <!-- rigging -->
+          <g class="line-thin">
+            <line x1="150" y1="40" x2="190" y2="68"/>
+            <line x1="150" y1="100" x2="190" y2="72"/>
+          </g>
+          <!-- payload -->
+          <rect x="190" y="62" width="20" height="16" class="fill-deep"/>
+          <text x="200" y="56" class="lbl-sm" text-anchor="middle">PAYLOAD</text>
+          <!-- accel -->
+          <g class="arrow"><line x1="220" y1="100" x2="245" y2="100"/></g>
+          <text x="232" y="116" class="lbl-sm" text-anchor="middle">a</text>
+        </svg>
+        <figcaption>FIG 6.6 — <b>Light-sail / Beam-driven</b> · Photon pressure on reflector. No propellant; unbounded ΔV.</figcaption>
+      </figure>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h3>Reactor &amp; Beam</h3>
+        <h4>Nuclear Thermal (NTR)</h4>
+        <p>H₂ propellant heated through a fission reactor core, expanded in a conventional CD nozzle. <b>I<sub>sp</sub> 800 – 1 000 s</b>; T/W &lt; 1 typically. NERVA-class.</p>
+
+        <h4>Nuclear Pulse (Orion)</h4>
+        <p>Behind-vehicle fission/fusion charges + pusher plate + shock absorbers. <b>I<sub>sp</sub> 10⁴ – 10⁶ s</b>, very high T/W. Theoretical only.</p>
+
+        <h4>Nuclear Electric (NEP)</h4>
+        <p>Reactor → electricity → ion/Hall thruster. <b>I<sub>sp</sub> 3 000 – 10 000 s</b>, T/W ≪ 1. Long-cruise only.</p>
+
+        <h4>Antimatter / Fusion (paper)</h4>
+        <p>Annihilation- or fusion-heated propellant. <b>I<sub>sp</sub> 10⁵ – 10⁶ s</b>. Fictional only.</p>
+      </div>
+      <div>
+        <h3>Electric &amp; Sail</h3>
+        <h4>Electric — Ion / Hall / MPD</h4>
+        <p>Xenon/argon ionized and electrostatically (or electromagnetically) accelerated. <b>I<sub>sp</sub> 1 500 – 10 000 s</b>; thrust ~mN. Vacuum only.</p>
+
+        <h4>Solar Thermal</h4>
+        <p>Concentrated sunlight heats H₂. <b>I<sub>sp</sub> ~750 s</b>. Space-only.</p>
+
+        <h4>Light-sail / Beam-driven</h4>
+        <p>Photon pressure (laser or solar). No onboard propellant. Acceleration tiny but unbounded ΔV. Force F = 2P/c (perfect reflector).</p>
+
+        <div class="box note">
+          <div class="box-title">⚑ EXOTIC TRADE</div>
+          High I<sub>sp</sub> ↔ low thrust is the universal pattern. NTR is the only entry on this folio with both decent I<sub>sp</sub> AND launchable T/W. Everything else assumes you're already in vacuum.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 7 CHAMBER & NOZZLE ============ -->
+  <section id="s7">
+    <div class="section-head">
+      <div class="num">§11</div>
+      <h2>Combustion Chamber &amp; Nozzle<small>P<sub>c</sub> · A* · ε · GEOMETRY</small></h2>
+      <div class="meta">PLATE 11.0</div>
+    </div>
+
+    <div class="grid-fig-text">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 480 200">
+          <line class="line-cl" x1="10" y1="100" x2="470" y2="100"/>
+          <!-- chamber -->
+          <path class="line" d="M 30 60 L 200 60 L 240 90 L 260 95 L 320 70 L 460 50 L 460 150 L 320 130 L 260 105 L 240 110 L 200 140 L 30 140 Z"/>
+          <text x="115" y="50" class="lbl-sm" text-anchor="middle">CHAMBER  Pc, Tc</text>
+          <text x="250" y="84" class="lbl-sm" text-anchor="middle">THROAT A*</text>
+          <text x="395" y="44" class="lbl-sm" text-anchor="middle">EXIT  Aₑ</text>
+          <line class="line-dashed" x1="250" y1="60" x2="250" y2="140"/>
+          <line class="line-dashed" x1="460" y1="50" x2="460" y2="150"/>
+          <!-- expansion -->
+          <text x="355" y="170" class="dim" text-anchor="middle">ε = Aₑ / A*</text>
+          <!-- arrows -->
+          <g class="arrow"><line x1="50" y1="100" x2="80" y2="100"/></g>
+        </svg>
+        <figcaption>FIG 7.0 — Convergent-divergent (de Laval). Subsonic in chamber → sonic at throat → supersonic in divergent.</figcaption>
+      </figure>
+      <div>
+        <h3>Key Equations</h3>
+        <div class="eq">
+          <div class="eq-label">EQ 7.1 · CHARACTERISTIC VELOCITY c*</div>
+          $$ c^{*} = \frac{P_{c}\,A^{*}}{\dot m} = \frac{1}{\Gamma}\sqrt{\frac{R\,T_{c}}{\mathcal{M}}} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 7.2 · THRUST COEFFICIENT</div>
+          $$ C_{F} = \sqrt{\dfrac{2\gamma^{2}}{\gamma-1}\!\left(\dfrac{2}{\gamma+1}\right)^{\!\frac{\gamma+1}{\gamma-1}}\!\!\left[1-\!\left(\dfrac{P_{e}}{P_{c}}\right)^{\!\frac{\gamma-1}{\gamma}}\right]} + \dfrac{(P_{e}-P_{a})A_{e}}{P_{c}A^{*}} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 7.3 · THRUST</div>
+          $$ F = C_{F}\,P_{c}\,A^{*} = \dot m\,V_{e} + (P_{e}-P_{a})A_{e} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 7.4 · EXPANSION RATIO</div>
+          $$ \varepsilon = \frac{A_{e}}{A^{*}} $$
+          <div class="eq-where">Match P<sub>e</sub> to ambient P<sub>a</sub> for max thrust at altitude. ε = 4–10 sea level; 40–200 vacuum.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 7.5 · EXIT VELOCITY (ideal)</div>
+          $$ V_{e}=\sqrt{\frac{2\gamma}{\gamma-1}\frac{RT_{c}}{\mathcal M}\!\left[1-\!\left(\frac{P_e}{P_c}\right)^{\!\frac{\gamma-1}{\gamma}}\right]} $$
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div>
+        <h4>Nozzle Types</h4>
+        <ul class="tight">
+          <li><b>Conical</b> — simplest, ~15° half-angle, λ-loss.</li>
+          <li><b>Bell (parabolic)</b> — most common. Optimized contour, short, high-η.</li>
+          <li><b>Plug / Aerospike</b> — altitude-compensating; flow expands against ambient.</li>
+          <li><b>Expansion-deflection</b> — short, internal plug.</li>
+          <li><b>Dual-bell</b> — two design points; switches at altitude.</li>
+          <li><b>Extendible</b> — telescoping skirt for space.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Flow Conditions</h4>
+        <ul class="tight">
+          <li><b>Under-expanded</b> P<sub>e</sub> &gt; P<sub>a</sub> — losing potential thrust.</li>
+          <li><b>Matched</b> P<sub>e</sub> = P<sub>a</sub> — design point.</li>
+          <li><b>Over-expanded</b> P<sub>e</sub> &lt; P<sub>a</sub> — shocks, separation, side-loads.</li>
+          <li><b>Choked</b> M = 1 at throat — mass flow set by P<sub>c</sub>, A*, T<sub>c</sub>.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Chamber</h4>
+        <ul class="tight">
+          <li><b>P<sub>c</sub></b>: 3–7 MPa solids; 7–25 MPa liquids; &gt; 25 MPa staged.</li>
+          <li><b>T<sub>c</sub></b>: 2 800–3 700 K typical.</li>
+          <li><b>L*</b> = V<sub>c</sub>/A* — characteristic length, ~0.8–1.5 m for residence time.</li>
+          <li><b>Cooling</b>: regenerative, film, ablative, radiative, transpiration.</li>
+          <li><b>Injectors</b>: impinging, coaxial, pintle, showerhead.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 8 INLETS ============ -->
+  <section id="s8">
+    <div class="section-head">
+      <div class="num">§12</div>
+      <h2>Inlets — Air-breathing<small>SUBSONIC · NORMAL · OBLIQUE · MIXED</small></h2>
+      <div class="meta">PLATE 12.0</div>
+    </div>
+
+    <div class="grid-3">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 130">
+          <path class="line" d="M 20 50 C 50 50, 70 56, 100 60 L 220 60 L 220 90 L 100 90 C 70 94, 50 100, 20 100 Z"/>
+          <g class="arrow-faint">
+            <line x1="0" y1="40" x2="20" y2="50"/>
+            <line x1="0" y1="75" x2="20" y2="75"/>
+            <line x1="0" y1="110" x2="20" y2="100"/>
+          </g>
+          <text x="120" y="46" class="lbl-sm" text-anchor="middle">PITOT / SUBSONIC</text>
+          <text x="120" y="116" class="dim" text-anchor="middle">M ≤ 1.4 · simple round lip</text>
+        </svg>
+        <figcaption>FIG 8.1 — Pitot / NACA. Plenum behind round lip.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 130">
+          <path class="line" d="M 30 50 L 220 60 L 220 90 L 30 100 Z"/>
+          <path class="fill-deep" d="M 30 75 L 100 60 L 100 90 Z"/>
+          <line class="line-dashed" x1="100" y1="60" x2="30" y2="35"/>
+          <line class="line-dashed" x1="100" y1="90" x2="30" y2="115"/>
+          <text x="120" y="46" class="lbl-sm" text-anchor="middle">CONICAL SPIKE</text>
+          <text x="120" y="116" class="dim" text-anchor="middle">single oblique shock</text>
+        </svg>
+        <figcaption>FIG 8.2 — Spike (oblique-shock) — SR-71, BrahMos style.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 130">
+          <path class="line" d="M 20 30 L 220 50 L 220 100 L 20 120 Z"/>
+          <path class="fill-deep" d="M 20 30 L 110 60 L 220 50 L 220 60 L 20 50 Z"/>
+          <line class="line-dashed" x1="110" y1="60" x2="0" y2="80"/>
+          <text x="120" y="24" class="lbl-sm" text-anchor="middle">RAMP / 2-D</text>
+          <text x="120" y="128" class="dim" text-anchor="middle">multi-shock external compression</text>
+        </svg>
+        <figcaption>FIG 8.3 — Ramp inlet — F-15, MiG-25 style.</figcaption>
+      </figure>
+    </div>
+
+    <table class="tight">
+      <thead><tr><th>Type</th><th>Mach</th><th>Compression</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><b>Pitot / NACA flush</b></td><td>0 – 1.4</td><td>Normal shock + diffuser</td><td>Simple, high loss above M 1.5.</td></tr>
+        <tr><td><b>Conical spike (axisymm.)</b></td><td>1.4 – 3.5</td><td>Conical oblique + terminal normal</td><td>Translating spike for variable geometry.</td></tr>
+        <tr><td><b>2-D ramp</b></td><td>1.5 – 3.5</td><td>One or more wedge shocks</td><td>Easier to make variable; rectangular.</td></tr>
+        <tr><td><b>Mixed-compression</b></td><td>2.5 – 5</td><td>External + internal shocks</td><td>High recovery; "unstart" risk.</td></tr>
+        <tr><td><b>Isentropic</b></td><td>2 – 6</td><td>Continuous turning</td><td>Lossless ideal; sensitive off-design.</td></tr>
+        <tr><td><b>Scramjet inlet</b></td><td>5+</td><td>Multiple oblique, no normal</td><td>Flow stays supersonic into combustor.</td></tr>
+        <tr><td><b>DSI / bump</b></td><td>1 – 2</td><td>Diverterless bump</td><td>Stealth-friendly. F-35 style.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid-2">
+      <div class="box">
+        <div class="box-title">PRESSURE RECOVERY</div>
+        $$ \eta_{r} = \frac{P_{t,2}}{P_{t,\infty}} $$
+        Goal &gt; 0.9 supersonic. Each shock costs total pressure; staging more, weaker shocks recovers more.
+      </div>
+      <div class="box">
+        <div class="box-title">UNSTART</div>
+        Mixed-compression inlets can suddenly expel their internal shock — thrust collapses, drag spikes, severe asymmetric loads. Bypass doors, bleed slots, and active control mitigate.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 14 STAGING ============ -->
+  <section id="s14">
+    <div class="section-head">
+      <div class="num">§13</div>
+      <h2>Staging &amp; ΔV Budget<small>SERIAL · PARALLEL · DROP-TANK</small></h2>
+      <div class="meta">PLATE 13.0</div>
+    </div>
+
+    <div class="grid-2">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 600 180">
+          <!-- serial -->
+          <text x="100" y="20" class="lbl" text-anchor="middle">SERIAL</text>
+          <path class="line" d="M 20 70 L 50 70 L 70 60 L 130 60 L 130 100 L 70 100 L 50 90 L 20 90 Z"/>
+          <line class="line-thin" x1="80" y1="60" x2="80" y2="100"/>
+          <text x="50" y="84" class="lbl-sm">2</text>
+          <text x="105" y="84" class="lbl-sm">1</text>
+          <!-- parallel -->
+          <text x="300" y="20" class="lbl" text-anchor="middle">PARALLEL (BOOSTERS)</text>
+          <g transform="translate(220,40)">
+            <path class="line" d="M 0 30 L 30 30 L 50 20 L 110 20 L 110 60 L 50 60 L 30 50 L 0 50 Z"/>
+            <ellipse cx="60" cy="14" rx="22" ry="6" class="line-thin" fill="rgba(60,40,20,0.18)"/>
+            <ellipse cx="60" cy="66" rx="22" ry="6" class="line-thin" fill="rgba(60,40,20,0.18)"/>
+            <line class="line-thin" x1="38" y1="14" x2="38" y2="14"/>
+            <path class="fill-mid" d="M 38 8 L 82 8 L 90 14 L 82 20 L 38 20 Z"/>
+            <path class="fill-mid" d="M 38 60 L 82 60 L 90 66 L 82 72 L 38 72 Z"/>
+          </g>
+          <!-- piggy / drop-tank -->
+          <text x="500" y="20" class="lbl" text-anchor="middle">DROP-TANK</text>
+          <path class="line" d="M 420 70 L 580 70 L 580 90 L 420 90 Z"/>
+          <path class="line-dashed" d="M 460 70 L 460 90"/>
+          <path class="fill-fuel" d="M 422 72 L 458 72 L 458 88 L 422 88 Z"/>
+          <text x="440" y="84" class="lbl-sm">aux</text>
+        </svg>
+        <figcaption>FIG 14.0 — Staging arrangements.</figcaption>
+      </figure>
+      <div>
+        <h3>Why Stage?</h3>
+        <p>Carrying empty tankage is mass that pays no ΔV dividend. Dropping it resets the mass ratio and inflates total ΔV.</p>
+        <div class="eq">
+          <div class="eq-label">EQ 14.1 · TOTAL ΔV (n stages)</div>
+          $$ \Delta V_{tot}=\sum_{i=1}^{n} I_{sp,i}\,g_{0}\,\ln\!\frac{m_{0,i}}{m_{0,i}-m_{p,i}} $$
+        </div>
+        <h3>Types</h3>
+        <dl class="keyed">
+          <dt>Serial</dt><dd>stages stacked nose-to-tail; ignite sequentially.</dd>
+          <dt>Parallel</dt><dd>side-mounted boosters fire with core; jettisoned early.</dd>
+          <dt>Asparagus</dt><dd>parallel + cross-feed; outer boosters drain first.</dd>
+          <dt>Half-stage</dt><dd>jettison only the empty tank (early Atlas).</dd>
+          <dt>Stage-and-a-half</dt><dd>boosters drop, sustainer continues with same engine.</dd>
+        </dl>
+        <h3>Range — Powered vs Coast</h3>
+        <p>Tactical: short boost (1–10 s), long ballistic/glide coast. ICBM: 2–4 stages, &lt; 5 min powered, &gt; 25 min ballistic. Cruise: continuous low-thrust over hours.</p>
+        <div class="box">
+          <div class="box-title">RANGE ↔ ΔV (BALLISTIC)</div>
+          $$ R\approx\frac{V^{2}}{g}\sin 2\theta \quad\text{(flat, no drag)} $$
+          For long range over a spherical Earth use Lambert's problem — angle of repose typically 22–24°.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 13 LOADS ============ -->
+  <section id="s13">
+    <div class="section-head">
+      <div class="num">§14</div>
+      <h2>Structural Loads<small>AXIAL · BENDING · HOOP · THERMAL</small></h2>
+      <div class="meta">PLATE 14.0</div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h3>Load Cases</h3>
+        <dl class="keyed">
+          <dt>Axial (thrust)</dt><dd>compression / tension along x. Worst at ignition for solids; structural columns must avoid Euler buckling.</dd>
+          <dt>Bending</dt><dd>moment from aero side-force × moment-arm. Worst at max-q with α perturbation.</dd>
+          <dt>Hoop / pressure</dt><dd>chamber, tank, motor case. σ<sub>θ</sub> = pr/t.</dd>
+          <dt>Longitudinal pressure</dt><dd>σ<sub>x</sub> = pr/2t.</dd>
+          <dt>Aero-heating</dt><dd>thermal stress + material softening. Skin temps 500–2500 K.</dd>
+          <dt>Inertial / G-load</dt><dd>20–60 g manoeuvres on AAMs; 5–10 g on cruise; 1.5–3 g launch.</dd>
+          <dt>Vibration / acoustic</dt><dd>solid motor &amp; jet noise drive 150–170 dB on launch.</dd>
+          <dt>Pogo</dt><dd>longitudinal coupling between structure &amp; feedlines on liquid rockets.</dd>
+        </dl>
+      </div>
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 13.1 · HOOP STRESS (THIN WALL)</div>
+          $$ \sigma_{\theta} = \frac{p\,r}{t},\quad \sigma_{x}=\frac{p\,r}{2t} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 13.2 · EULER BUCKLING (column)</div>
+          $$ P_{cr}=\frac{\pi^{2} E I}{(KL_{e})^{2}} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 13.3 · BENDING (beam)</div>
+          $$ \sigma = \frac{M\,c}{I},\quad I=\tfrac{\pi}{4}(r_{o}^{4}-r_{i}^{4}) $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 13.4 · NORMAL-LOAD FACTOR</div>
+          $$ n = \frac{L}{W}=\frac{q\,S\,C_{L}}{m\,g} $$
+          <div class="eq-where">Manoeuvre limit; structures sized to n<sub>max</sub> · safety factor (1.25–1.5).</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 13.5 · STAGNATION TEMPERATURE</div>
+          $$ T_{0}=T_{\infty}\!\left(1+\tfrac{\gamma-1}{2}M^{2}\right) $$
+          <div class="eq-where">M=3 → T₀≈2.8·T∞ (~880 K). M=6 → ~7.2·T∞.</div>
+        </div>
+        <div class="box">
+          <div class="box-title">MATERIAL CHOICE</div>
+          <ul class="tight">
+            <li>Al 6061/7075 — &lt; ~150 °C; cheap, light</li>
+            <li>Steel (4130/Maraging) — motor cases, high p</li>
+            <li>Ti-6Al-4V — 400 °C, hot structure</li>
+            <li>Composites (CFRP) — lightest; heat-limited</li>
+            <li>Inconel/Rene — turbine, 1100 °C+</li>
+            <li>Ablative (cork, silica-phenolic) — heat shield</li>
+            <li>UHTC (HfC, ZrB₂) — leading edges &gt; 2000 K</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 15 WARHEADS ============ -->
+  <section id="s15">
+    <div class="section-head">
+      <div class="num">§15</div>
+      <h2>Warheads<small>EFFECT MECHANISMS · GENERAL CHARACTERISTICS</small></h2>
+      <div class="meta">PLATE 15.0</div>
+    </div>
+
+    <p class="margin-note">For fictional design only — categories below describe broad effect classes used in worldbuilding and naval-architecture literature; no targeting, manufacturing or yield-tuning detail.</p>
+
+    <table class="tight">
+      <thead><tr><th>Class</th><th>Mechanism</th><th>Best Against</th><th>Sketch Notes</th></tr></thead>
+      <tbody>
+        <tr><td><b>Blast / HE</b></td><td>Detonation overpressure shockwave</td><td>Soft targets, structures</td><td>Thin metal case; shock radius ∝ W^(1/3).</td></tr>
+        <tr><td><b>Fragmentation</b></td><td>Pre-formed or natural casing fragments</td><td>Personnel, soft vehicles, aircraft</td><td>Velocity ~1500–2000 m/s; scored or notched case.</td></tr>
+        <tr><td><b>Continuous-rod</b></td><td>Expanding metal hoop</td><td>Aircraft (slicing structure)</td><td>Rod ring unfurls into circle.</td></tr>
+        <tr><td><b>Shaped charge (HEAT)</b></td><td>Conical liner forms hypervelocity jet</td><td>Armor</td><td>Stand-off-distance critical; jet ~8–10 km/s.</td></tr>
+        <tr><td><b>Explosively-Formed Penetrator</b></td><td>Liner becomes single slug</td><td>Vehicles at distance</td><td>Less standoff-sensitive than HEAT.</td></tr>
+        <tr><td><b>Kinetic / inert</b></td><td>Mass × V² alone</td><td>Hardened, time-on-target</td><td>Tungsten or DU rod; KE = ½mv².</td></tr>
+        <tr><td><b>Penetrator</b></td><td>Hardened nose + delayed detonation</td><td>Bunkers, ships</td><td>Steel/nickel case, programmable fuze delay.</td></tr>
+        <tr><td><b>Submunition / cluster</b></td><td>Dispersed bomblets / mines</td><td>Area targets</td><td>Dispenser opens at altitude h<sub>d</sub>.</td></tr>
+        <tr><td><b>Thermobaric</b></td><td>Fuel cloud + 2nd-stage ignition</td><td>Caves, structures</td><td>Long-duration overpressure.</td></tr>
+        <tr><td><b>Incendiary</b></td><td>Sustained burn (thermite, WP)</td><td>Materiel, vegetation</td><td>Often submunition payload.</td></tr>
+        <tr><td><b>Inert / Practice</b></td><td>None (training)</td><td>—</td><td>Concrete or sand-filled.</td></tr>
+        <tr><td><b>Special / payload bus</b></td><td>Dispenses sensors, jammers, decoys, leaflets</td><td>Non-kinetic</td><td>Time- or GPS-cued opening.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============ § 15β SUBMUNITIONS ============ -->
+  <section id="s15b">
+    <div class="section-head">
+      <div class="num">§15β</div>
+      <h2>Submunitions &amp; Dispensers<small>BUS · DISPENSER · BOMBLET · MINE · DECOY</small></h2>
+      <div class="meta">PLATE 15β.0 — 15β.3</div>
+    </div>
+
+    <p class="margin-note">A submunition payload trades single-point lethality for <em>area coverage</em>. The carrier becomes a <b>bus</b> that opens at altitude h<sub>d</sub>, expels N children, each of which arms, descends, and functions independently. For worldbuilding only — categories and physics are general.</p>
+
+    <div class="grid-fig-text">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 720 280">
+          <line class="line-cl" x1="20" y1="60" x2="700" y2="60"/>
+          <!-- bus / carrier in flight -->
+          <path class="line" d="M 30 50 C 60 50, 80 44, 110 38 L 200 38 L 215 44 L 215 76 L 200 82 L 110 82 C 80 76, 60 70, 30 70 Z"/>
+          <text x="50" y="32" class="lbl-sm">CARRIER / BUS</text>
+          <!-- opening event -->
+          <g transform="translate(245,60)">
+            <circle r="14" fill="none" stroke="#a02818" stroke-dasharray="2 2"/>
+            <text y="4" class="lbl-sm" text-anchor="middle" fill="#a02818">OPEN</text>
+          </g>
+          <text x="245" y="32" class="lbl-sm" text-anchor="middle">@ h_d (alt)</text>
+          <!-- spread cone -->
+          <path class="line-thin" stroke-dasharray="3 2" d="M 260 60 L 700 20 M 260 60 L 700 130" fill="none"/>
+          <!-- bomblets dispersing -->
+          <g class="fill-warhead">
+            <circle cx="330" cy="55" r="4"/>
+            <circle cx="360" cy="68" r="4"/>
+            <circle cx="400" cy="48" r="4"/>
+            <circle cx="440" cy="75" r="4"/>
+            <circle cx="480" cy="40" r="4"/>
+            <circle cx="520" cy="82" r="4"/>
+            <circle cx="560" cy="32" r="4"/>
+            <circle cx="600" cy="90" r="4"/>
+            <circle cx="640" cy="24" r="4"/>
+          </g>
+          <!-- ribbon stabilizers -->
+          <g class="line-thin">
+            <line x1="330" y1="55" x2="322" y2="45"/>
+            <line x1="400" y1="48" x2="392" y2="38"/>
+            <line x1="480" y1="40" x2="472" y2="30"/>
+            <line x1="560" y1="32" x2="552" y2="22"/>
+          </g>
+          <!-- ground -->
+          <path d="M 20 240 L 700 240" stroke="#1a1410" stroke-width="1"/>
+          <path d="M 20 240 L 700 240" stroke="#1a1410" stroke-width="0.5" stroke-dasharray="2 3" transform="translate(0,4)"/>
+          <!-- impact pattern -->
+          <g class="fill-deep">
+            <circle cx="330" cy="240" r="3"/>
+            <circle cx="360" cy="240" r="3"/>
+            <circle cx="395" cy="240" r="3"/>
+            <circle cx="430" cy="240" r="3"/>
+            <circle cx="470" cy="240" r="3"/>
+            <circle cx="510" cy="240" r="3"/>
+            <circle cx="548" cy="240" r="3"/>
+            <circle cx="588" cy="240" r="3"/>
+            <circle cx="628" cy="240" r="3"/>
+          </g>
+          <!-- footprint dim -->
+          <line class="line-thin" x1="330" y1="258" x2="628" y2="258" marker-start="url(#arr-rev)" marker-end="url(#arr)"/>
+          <text x="479" y="272" class="dim" text-anchor="middle">FOOTPRINT  W × L</text>
+          <!-- altitude dim -->
+          <line class="line-thin" x1="245" y1="60" x2="245" y2="240" marker-start="url(#arr)" marker-end="url(#arr)"/>
+          <text x="230" y="150" class="dim" text-anchor="end">h_d</text>
+        </svg>
+        <figcaption>FIG 15β.0 — Bus opens at altitude h<sub>d</sub>, sub-payloads scatter ballistically + decelerate; ground footprint sized by h<sub>d</sub>, ejection velocity, and descent time.</figcaption>
+      </figure>
+      <div>
+        <h3>The Dispenser Sequence</h3>
+        <ol class="tight">
+          <li><b>Cruise</b> — bus carries N submunitions inside a thin skin or split-clamshell.</li>
+          <li><b>Arming cue</b> — environment OK (above safe-sep alt., outside no-go zone).</li>
+          <li><b>Open event</b> — pyrotechnic cord, gas generator, spin-eject, or shaped linear charge splits the case.</li>
+          <li><b>Eject</b> — children pushed outward by gas, springs, centrifugal spin, or aero-tumble.</li>
+          <li><b>Stabilize</b> — ribbon, streamer, parachute, drogue, or aero-fin orient each child.</li>
+          <li><b>Arm</b> — second S&amp;A cue (descent time, spin count, pressure).</li>
+          <li><b>Function</b> — impact, prox, time, command, or self-destruct.</li>
+        </ol>
+        <div class="box note">
+          <div class="box-title">⚑ DESIGN DRIVERS</div>
+          The whole bus is sized by three numbers: how big the footprint must be, how dense (children per m²), and how reliable each child must arm/function. Reliability appears twice — at arming and at fuzing — and the dud-rate compounds.
+        </div>
+      </div>
+    </div>
+
+    <h3>Submunition Categories</h3>
+    <table class="tight">
+      <thead><tr><th>Class</th><th>Effect</th><th>Carrier</th><th>Sketch</th></tr></thead>
+      <tbody>
+        <tr><td><b>Anti-personnel frag</b></td><td>Pre-formed fragments + small HE</td><td>Bus, gun shell, rocket</td><td>Ribbon-stabilized; bursts at impact or low prox.</td></tr>
+        <tr><td><b>Anti-armor (HEAT)</b></td><td>Shaped charge top-attack</td><td>Cargo munition, MLRS</td><td>Sensor-fuzed: scans, dives, fires copper slug.</td></tr>
+        <tr><td><b>Dual-purpose (DPICM)</b></td><td>HEAT jet + frag sleeve</td><td>Artillery, MLRS</td><td>Both armor &amp; soft. High historical dud rate.</td></tr>
+        <tr><td><b>Sensor-fuzed (SFW)</b></td><td>IR/mmW seeker, EFP slug</td><td>Tube dispenser, parachute</td><td>Spins under chute, scans cone, fires on detect.</td></tr>
+        <tr><td><b>Anti-runway / penetrator</b></td><td>Tandem charge: crater + delayed</td><td>Cluster bomb</td><td>Retarder slows, then accelerator drives in.</td></tr>
+        <tr><td><b>Scatterable mine</b></td><td>Anti-personnel or anti-tank mine</td><td>Bus, MLRS, helicopter</td><td>Self-destruct timer 4 h–15 d typical.</td></tr>
+        <tr><td><b>Incendiary</b></td><td>Thermite, WP, magnesium</td><td>Cluster, artillery</td><td>Sustained burn vs materiel.</td></tr>
+        <tr><td><b>Smoke / obscurant</b></td><td>HC, RP, IR-blocking aerosol</td><td>Mortar, rocket</td><td>Generates screen for minutes.</td></tr>
+        <tr><td><b>Chaff / RF decoy</b></td><td>Metallized fibers cut to λ/2</td><td>Aircraft, ship, missile bus</td><td>Cloud RCS &gt;&gt; platform RCS.</td></tr>
+        <tr><td><b>Flare / IR decoy</b></td><td>Pyrophoric metal pellets</td><td>Dispenser cassette</td><td>MTV or spectral-match formulation.</td></tr>
+        <tr><td><b>Sensor / sonobuoy</b></td><td>Acoustic/seismic/RF listener</td><td>UAV, A/S aircraft</td><td>Datalinks back; battery limited.</td></tr>
+        <tr><td><b>Leaflet / PSYOP</b></td><td>Paper bundle</td><td>Artillery shell</td><td>Time-fuzed open at altitude.</td></tr>
+        <tr><td><b>Loiter sub-vehicle</b></td><td>Mini-drone with seeker</td><td>Cruise missile / dispenser</td><td>Self-propelled, search-and-destroy.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid-3">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 160">
+          <!-- bomblet body -->
+          <ellipse cx="120" cy="80" rx="22" ry="30" class="line" fill="rgba(60,40,20,0.18)"/>
+          <line class="line-thin" x1="100" y1="60" x2="140" y2="60"/>
+          <line class="line-thin" x1="100" y1="75" x2="140" y2="75"/>
+          <line class="line-thin" x1="100" y1="90" x2="140" y2="90"/>
+          <text x="168" y="82" class="lbl-sm">scored case</text>
+          <line class="leader" x1="165" y1="78" x2="142" y2="75"/>
+          <!-- ribbon -->
+          <g class="line-thin">
+            <path d="M 120 110 Q 116 130, 124 145 Q 132 130, 120 110" fill="rgba(60,40,20,0.15)"/>
+            <line x1="120" y1="110" x2="120" y2="148"/>
+          </g>
+          <text x="160" y="140" class="lbl-sm">ribbon</text>
+          <line class="leader" x1="158" y1="136" x2="128" y2="130"/>
+          <!-- fuze -->
+          <rect x="114" y="42" width="12" height="10" class="hatch"/>
+          <text x="80" y="42" class="lbl-sm" text-anchor="end">fuze</text>
+          <line class="leader" x1="82" y1="42" x2="112" y2="46"/>
+        </svg>
+        <figcaption>FIG 15β.1 — Anti-personnel bomblet. Scored frag case + ribbon stabilizer + impact / time fuze.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 160">
+          <!-- parachute -->
+          <path class="line" d="M 60 30 Q 120 0, 180 30 L 165 50 L 75 50 Z" fill="rgba(60,40,20,0.10)"/>
+          <g class="line-thin">
+            <line x1="75" y1="50" x2="110" y2="95"/>
+            <line x1="100" y1="50" x2="115" y2="95"/>
+            <line x1="140" y1="50" x2="125" y2="95"/>
+            <line x1="165" y1="50" x2="130" y2="95"/>
+          </g>
+          <!-- spinning body -->
+          <rect x="100" y="95" width="40" height="24" class="fill-deep"/>
+          <text x="120" y="110" class="lbl-sm" text-anchor="middle" fill="#f1e8d4">EFP</text>
+          <!-- spin arrow -->
+          <path class="line-thin" d="M 145 107 A 10 10 0 1 1 144 107" fill="none" marker-end="url(#arr)"/>
+          <!-- scan cone -->
+          <path class="line-thin" stroke-dasharray="2 2" d="M 110 119 L 80 155 M 130 119 L 160 155" fill="none"/>
+          <text x="120" y="152" class="lbl-sm" text-anchor="middle">scan</text>
+        </svg>
+        <figcaption>FIG 15β.2 — Sensor-fuzed weapon (SFW). Parachute decel, spin scan, EFP fires on IR/mmW lock.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 160">
+          <!-- mine body -->
+          <ellipse cx="120" cy="100" rx="36" ry="10" class="line" fill="rgba(60,40,20,0.18)"/>
+          <ellipse cx="120" cy="94" rx="36" ry="10" class="line" fill="rgba(60,40,20,0.10)"/>
+          <line class="line-thin" x1="84" y1="94" x2="84" y2="100"/>
+          <line class="line-thin" x1="156" y1="94" x2="156" y2="100"/>
+          <!-- tripwires -->
+          <g class="line-thin" stroke-dasharray="1.5 1.5">
+            <line x1="120" y1="94" x2="60" y2="40"/>
+            <line x1="120" y1="94" x2="180" y2="40"/>
+            <line x1="120" y1="94" x2="40" y2="94"/>
+            <line x1="120" y1="94" x2="200" y2="94"/>
+          </g>
+          <!-- antenna / sensor -->
+          <line class="line-thin" x1="120" y1="94" x2="120" y2="60"/>
+          <circle cx="120" cy="58" r="3" class="fill-warhead"/>
+          <!-- timer -->
+          <text x="120" y="140" class="lbl-sm" text-anchor="middle">SD timer  τ</text>
+        </svg>
+        <figcaption>FIG 15β.3 — Scatterable mine: pressure / tripwire / magnetic sensors + self-destruct timer τ.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Sizing &amp; Footprint Equations</h3>
+    <div class="grid-2">
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 15β.1 · CHILDREN COUNT</div>
+          $$ N = \frac{m_{pl} - m_{bus}}{m_{c}} $$
+          <div class="eq-where">m<sub>pl</sub> total payload mass, m<sub>bus</sub> dispenser structure + ejection hardware, m<sub>c</sub> per-child mass.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15β.2 · BUS PACKING</div>
+          $$ V_{bus} \geq \frac{N\,V_{c}}{\eta_{pack}},\quad \eta_{pack}\approx 0.5\text{–}0.75 $$
+          <div class="eq-where">Hexagonal close-pack of cylinders ≈ 0.91; real cassettes lose space to spacers, ribbons, wiring.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15β.3 · EJECTION VELOCITY</div>
+          $$ v_{ej}=\sqrt{\frac{2 E_{gas}\,\eta}{m_{c}}}\quad\text{or}\quad v_{ej}=\omega\,r\;(\text{spin}) $$
+          <div class="eq-where">Gas-generator energy E<sub>gas</sub> with efficiency η; or spin radius r at angular rate ω. Typical 10–60 m/s.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15β.4 · DESCENT TIME (terminal v)</div>
+          $$ v_{t}=\sqrt{\frac{2 m_{c} g}{\rho\,C_{D}\,A}},\quad t_{d}\approx h_{d}/v_{t} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15β.5 · FOOTPRINT RADIUS</div>
+          $$ R_{fp} \approx v_{ej}\,t_{d} + \tfrac{1}{2}\Delta V_{wind}\,t_{d} $$
+          <div class="eq-where">Add carrier velocity for a streaked (cigar-shaped) footprint; wind drift bows it.</div>
+        </div>
+      </div>
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 15β.6 · SUBMUNITION DENSITY</div>
+          $$ \sigma_{c} = \frac{N}{\pi R_{fp}^{2}} \quad [\text{children/m}^{2}] $$
+          <div class="eq-where">Lethal density vs personnel: ~0.01–0.05 / m². Vs vehicles in column: ~0.001 / m² with seeker assist.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15β.7 · COVERAGE PROBABILITY</div>
+          $$ P_{k} = 1 - \exp(-\sigma_{c}\,A_{lethal}) $$
+          <div class="eq-where">Poisson model: A<sub>lethal</sub> = effective lethal area per child against the target class.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15β.8 · RELIABLE FRACTION</div>
+          $$ N_{eff} = N\,p_{eject}\,p_{arm}\,p_{func} $$
+          <div class="eq-where">Each stage is &lt; 1; multiply. Historical DPICM dud rates 2–25% → modern target &lt; 1% with self-destruct + self-deactivate.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15β.9 · OPENING ALTITUDE</div>
+          $$ h_{d}^{*} = \arg\min_{h}\!\left[\sigma_{wind}^{2}(h)\,t_{d}^{2}(h) - 2 R_{fp,\text{tgt}}^{2}\right] $$
+          <div class="eq-where">Open too high → wind smears the pattern. Too low → footprint shrinks below target. Sweet spot 100–2000 m typical.</div>
+        </div>
+        <div class="box">
+          <div class="box-title">FOOTPRINT GEOMETRIES</div>
+          <ul class="tight">
+            <li><b>Spin-eject</b> — circular pattern, uniform density.</li>
+            <li><b>Linear / aerial-ejected</b> — cigar / streak along carrier track.</li>
+            <li><b>Sequenced</b> — multiple bursts → overlapping circles, controlled coverage.</li>
+            <li><b>Steered child</b> — each kid corrects in-flight; arbitrary pattern.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>Stabilization &amp; Decel</h3>
+    <table class="tight">
+      <thead><tr><th>Method</th><th>v<sub>t</sub></th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Bare body / aero-tumble</td><td>50–100 m/s</td><td>Cheapest, poor accuracy.</td></tr>
+        <tr><td>Ribbon / streamer</td><td>30–60 m/s</td><td>Ribbon-stab. bomblets — DPICM standard.</td></tr>
+        <tr><td>Drogue chute</td><td>15–30 m/s</td><td>Penetrators; first stage of two.</td></tr>
+        <tr><td>Main parachute</td><td>5–15 m/s</td><td>Sensor-fuzed; allows scan dwell.</td></tr>
+        <tr><td>Para-foil / steerable</td><td>5–20 m/s</td><td>Glide for offset / standoff.</td></tr>
+        <tr><td>Ballute</td><td>20–40 m/s</td><td>Hypersonic decel; high-alt drop.</td></tr>
+        <tr><td>Powered (rocket)</td><td>variable</td><td>Loitering submunition; extends footprint.</td></tr>
+        <tr><td>Spin only</td><td>n/a</td><td>For sensor scan, not decel.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Safety &amp; Reliability Architecture</h3>
+    <div class="grid-2">
+      <div>
+        <h4>Two-tier S&amp;A (each child)</h4>
+        <ul class="tight">
+          <li><b>Cue 1</b> — bus separation event (acceleration or pin-pull).</li>
+          <li><b>Cue 2</b> — descent stabilization (spin count, ribbon tension, time).</li>
+          <li>Out-of-line detonator train rotates into line only after both.</li>
+          <li>Mechanical interrupter blocks initiation until alignment.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>End-of-life</h4>
+        <ul class="tight">
+          <li><b>Self-destruct (SD)</b> — pyro timer fires charge after τ if intact.</li>
+          <li><b>Self-neutralize (SN)</b> — disables firing train without detonating.</li>
+          <li><b>Self-deactivate (SDA)</b> — battery dies, electronic fuze inert.</li>
+          <li>Modern designs combine SD + SDA for redundancy → dud target &lt; 1%.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="box note">
+      <div class="box-title">⚑ DESIGN HEURISTIC</div>
+      Start from the target: footprint W×L and density σ<sub>c</sub> set N. N × m<sub>c</sub> + m<sub>bus</sub> sets payload mass; payload mass + ΔV sets motor; motor + payload sets airframe. Cluster munitions are <em>backwards</em>-designed: from the ground up.
+    </div>
+  </section>
+
+  <!-- ============ § 15γ SHAPED CHARGE GEOMETRY ============ -->
+  <section id="s15c">
+    <div class="section-head">
+      <div class="num">§15γ</div>
+      <h2>Shaped-Charge Geometry<small>LINER · STAND-OFF · JET FORMATION · EFP</small></h2>
+      <div class="meta">PLATE 15γ.0 — 15γ.3</div>
+    </div>
+
+    <p class="margin-note">A shaped charge is the geometric concentration of detonation energy onto a metal liner that collapses into a high-velocity jet (or slug). Penetration is governed by jet length, density ratio, and stand-off — not by total explosive mass. Worldbuilding/HS-class scope; physics only.</p>
+
+    <div class="grid-fig-text">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 540 260">
+          <line class="line-cl" x1="20" y1="40" x2="520" y2="40"/>
+          <!-- casing outline -->
+          <path class="line" d="M 60 60 L 60 200 L 260 200 L 260 60 Z" fill="rgba(60,40,20,0.06)"/>
+          <text x="40" y="130" class="lbl-sm" text-anchor="end">CASE</text>
+          <!-- explosive fill -->
+          <path d="M 70 70 L 250 70 L 250 190 L 180 190 L 160 130 L 140 190 L 70 190 Z" class="fill-deep"/>
+          <text x="160" y="84" class="lbl-sm" text-anchor="middle" fill="#f1e8d4">HE FILL</text>
+          <!-- detonator -->
+          <rect x="148" y="56" width="24" height="14" class="hatch"/>
+          <text x="160" y="50" class="lbl-sm" text-anchor="middle">DET</text>
+          <!-- liner cone -->
+          <path class="line" d="M 100 190 L 160 130 L 220 190" fill="none" stroke="#a02818" stroke-width="1.4"/>
+          <text x="86" y="195" class="lbl-sm" text-anchor="end" fill="#a02818">LINER</text>
+          <!-- apex angle markers -->
+          <path class="line-thin" d="M 145 145 A 18 18 0 0 1 175 145" fill="none" stroke-dasharray="2 2"/>
+          <text x="160" y="158" class="lbl-sm" text-anchor="middle">2α</text>
+          <!-- standoff -->
+          <line class="line-thin" x1="160" y1="200" x2="160" y2="240"/>
+          <text x="166" y="222" class="lbl-sm">S (stand-off)</text>
+          <!-- target -->
+          <rect x="80" y="240" width="160" height="14" class="hatch"/>
+          <text x="160" y="262" class="lbl-sm" text-anchor="middle">TARGET</text>
+          <!-- jet schematic right side -->
+          <g transform="translate(310,60)">
+            <text x="100" y="12" class="lbl-sm" text-anchor="middle">JET FORMATION</text>
+            <!-- collapsed liner -->
+            <path d="M 60 30 L 100 0 L 140 30" stroke="#a02818" fill="none"/>
+            <!-- collapse arrows -->
+            <g class="arrow"><line x1="80" y1="60" x2="95" y2="40"/></g>
+            <g class="arrow"><line x1="120" y1="60" x2="105" y2="40"/></g>
+            <!-- jet -->
+            <line x1="100" y1="40" x2="100" y2="180" stroke="#a02818" stroke-width="1.4"/>
+            <text x="108" y="120" class="lbl-sm" fill="#a02818">jet  v_j ≈ 7–10 km/s</text>
+            <!-- slug at tail -->
+            <circle cx="100" cy="180" r="6" fill="#a02818"/>
+            <text x="108" y="184" class="lbl-sm">slug v_s ≈ 1 km/s</text>
+            <!-- velocity gradient hatch -->
+            <g class="line-thin" stroke="#a02818" stroke-width="0.5">
+              <line x1="96" y1="50" x2="104" y2="50"/>
+              <line x1="96" y1="80" x2="104" y2="80"/>
+              <line x1="96" y1="110" x2="104" y2="110"/>
+              <line x1="96" y1="140" x2="104" y2="140"/>
+              <line x1="96" y1="165" x2="104" y2="165"/>
+            </g>
+          </g>
+        </svg>
+        <figcaption>FIG 15γ.0 — Conical shaped charge: detonation wave collapses copper liner along axis; tip of jet ≫ tail (slug) → jet stretches across stand-off S until particulation.</figcaption>
+      </figure>
+      <div>
+        <h3>Anatomy</h3>
+        <ul class="tight">
+          <li><b>Case</b> — confines HE long enough for liner collapse.</li>
+          <li><b>HE fill</b> — high-detonation-velocity (D = 7–9 km/s) explosive.</li>
+          <li><b>Wave-shaper</b> — inert insert that flattens the detonation wave.</li>
+          <li><b>Liner</b> — Cu, Ta, W, Mo, or DU; thickness ~3% of cone diameter.</li>
+          <li><b>Apex angle</b> 2α — typically 42–60° for jets, 130–160° for EFPs.</li>
+          <li><b>Stand-off</b> S — distance from liner base to target; 4–8 cone-diameters optimum.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Sizing &amp; Penetration</h3>
+    <div class="grid-2">
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 15γ.1 · BIRKHOFF JET VELOCITY</div>
+          $$ V_{j} = V_{0}\,\frac{\cos(\beta-\alpha)}{\sin\beta} $$
+          <div class="eq-where">V<sub>0</sub> liner collapse velocity, α apex half-angle, β collapse angle. Smaller α ⇒ faster jet.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15γ.2 · GURNEY (collapse v)</div>
+          $$ V_{0}=\sqrt{2E}\!\left(\frac{C/M}{1+0.5\,C/M}\right)^{1/2} $$
+          <div class="eq-where">√(2E) Gurney constant ≈ 2.4–2.9 km/s; C/M HE-to-liner mass ratio.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15γ.3 · HYDRODYNAMIC PENETRATION</div>
+          $$ P = L_{j}\sqrt{\rho_{j}/\rho_{t}} $$
+          <div class="eq-where">P penetration, L<sub>j</sub> jet length at impact, ρ ratio drives material choice (Cu→steel √(8.9/7.85)≈1.06; W→steel √(19.3/7.85)≈1.57).</div>
+        </div>
+      </div>
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 15γ.4 · JET LENGTH AT TIME t</div>
+          $$ L_{j}(t) = (V_{tip}-V_{tail})\,t $$
+          <div class="eq-where">Jet stretches until particulation time t<sub>p</sub>; choose stand-off so impact occurs near t<sub>p</sub>.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15γ.5 · OPTIMUM STAND-OFF</div>
+          $$ S_{opt} \approx 4\text{–}8\,D_{c} $$
+          <div class="eq-where">D<sub>c</sub> charge diameter. Shorter — jet under-developed; longer — particulated, drift loss.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15γ.6 · RULE-OF-THUMB PENETRATION</div>
+          $$ P/D_{c} \approx 6\text{–}10\;(\text{Cu liner, RHA target}) $$
+          <div class="eq-where">Modern precision charges 8–10× cone-diameter into RHA. Tandem charges defeat ERA + main armor.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Liner Geometries</h3>
+    <div class="grid-3">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 160">
+          <line class="line-cl" x1="10" y1="40" x2="230" y2="40"/>
+          <path class="line" d="M 60 130 L 120 50 L 180 130" fill="none" stroke="#a02818" stroke-width="1.4"/>
+          <line class="line-thin" stroke-dasharray="2 2" x1="120" y1="50" x2="120" y2="140"/>
+          <text x="120" y="20" class="lbl-sm" text-anchor="middle">CONE — 2α ≈ 42–60°</text>
+          <text x="120" y="155" class="lbl-sm" text-anchor="middle">jet, 8–10 D_c into RHA</text>
+        </svg>
+        <figcaption>FIG 15γ.1 — Conical liner — anti-armor jet weapon.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 160">
+          <line class="line-cl" x1="10" y1="40" x2="230" y2="40"/>
+          <path class="line" d="M 50 120 Q 120 60, 190 120" fill="none" stroke="#a02818" stroke-width="1.4"/>
+          <text x="120" y="20" class="lbl-sm" text-anchor="middle">HEMISPHERE</text>
+          <text x="120" y="150" class="lbl-sm" text-anchor="middle">slower, more massive jet</text>
+        </svg>
+        <figcaption>FIG 15γ.2 — Hemispherical liner — robust jet, lower P/D<sub>c</sub>.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 160">
+          <line class="line-cl" x1="10" y1="40" x2="230" y2="40"/>
+          <path class="line" d="M 50 100 Q 120 130, 190 100" fill="none" stroke="#a02818" stroke-width="1.4"/>
+          <text x="120" y="20" class="lbl-sm" text-anchor="middle">EFP — DISH (2α ≈ 140°)</text>
+          <text x="120" y="150" class="lbl-sm" text-anchor="middle">forms slug, v ≈ 2 km/s</text>
+        </svg>
+        <figcaption>FIG 15γ.3 — Shallow dish — explosively-formed penetrator (EFP). One coherent slug, long stand-off (50–100 D<sub>c</sub>).</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 160">
+          <line class="line-cl" x1="10" y1="40" x2="230" y2="40"/>
+          <path class="line" d="M 50 130 L 80 70 L 160 70 L 190 130" fill="none" stroke="#a02818" stroke-width="1.4"/>
+          <text x="120" y="20" class="lbl-sm" text-anchor="middle">TRUMPET / TULIP</text>
+          <text x="120" y="155" class="lbl-sm" text-anchor="middle">tailored velocity gradient</text>
+        </svg>
+        <figcaption>FIG 15γ.4 — Trumpet liner — extended jet for greater penetration depth.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 160">
+          <line class="line-cl" x1="10" y1="40" x2="230" y2="40"/>
+          <path class="line" d="M 60 130 L 100 60 L 140 60 L 180 130" fill="none" stroke="#a02818" stroke-width="1.4"/>
+          <path class="line" d="M 110 60 L 110 130 M 130 60 L 130 130" fill="none" stroke="#a02818" stroke-width="1"/>
+          <text x="120" y="20" class="lbl-sm" text-anchor="middle">TANDEM (2-stage)</text>
+          <text x="120" y="155" class="lbl-sm" text-anchor="middle">precursor + main</text>
+        </svg>
+        <figcaption>FIG 15γ.5 — Tandem charge: precursor defeats ERA / spaced armor; delayed main charge defeats base armor.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 240 160">
+          <line class="line-cl" x1="10" y1="40" x2="230" y2="40"/>
+          <path class="line" d="M 60 70 L 60 130 L 180 130 L 180 70 Z" fill="rgba(60,40,20,0.10)"/>
+          <line class="line-thin" x1="60" y1="100" x2="180" y2="100" stroke="#a02818" stroke-width="1.4"/>
+          <text x="120" y="20" class="lbl-sm" text-anchor="middle">LINEAR SC (LSC)</text>
+          <text x="120" y="155" class="lbl-sm" text-anchor="middle">cuts a line, not a hole</text>
+        </svg>
+        <figcaption>FIG 15γ.6 — Linear shaped charge — V-section liner; produces planar jet for cutting / explosive bolts.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Liner Material Cheat</h3>
+    <table class="tight">
+      <thead><tr><th>Material</th><th>ρ (g/cc)</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Copper (OFHC)</td><td>8.96</td><td>Workhorse; ductile, predictable jet.</td></tr>
+        <tr><td>Aluminum</td><td>2.70</td><td>Low-density, anti-personnel/incendiary.</td></tr>
+        <tr><td>Tantalum</td><td>16.65</td><td>EFP standard; ductile + dense.</td></tr>
+        <tr><td>Tungsten / WHA</td><td>17–18</td><td>Highest P, brittle — pressed/sintered.</td></tr>
+        <tr><td>Molybdenum</td><td>10.2</td><td>Alternative to Ta for EFPs.</td></tr>
+        <tr><td>Depleted U</td><td>19.0</td><td>Pyrophoric, dense; specialised use.</td></tr>
+        <tr><td>Glass / ceramic</td><td>2–4</td><td>Low-collateral, soft-target jets.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box note">
+      <div class="box-title">⚑ DESIGN HEURISTIC</div>
+      P/D<sub>c</sub> is set by liner material, apex angle, and HE quality — not by warhead mass. Doubling charge mass at fixed D<sub>c</sub> barely changes penetration; doubling D<sub>c</sub> at fixed proportions doubles it. This is why anti-tank warheads grow in <em>diameter</em>, not weight.
+    </div>
+  </section>
+
+  <!-- ============ § 15ε NUCLEAR BASICS ============ -->
+  <section id="s15e">
+    <div class="section-head">
+      <div class="num">§15ε</div>
+      <h2>Nuclear — Yield &amp; Effects<small>FISSION · FUSION · SCALING LAWS · GENERIC PHYSICS</small></h2>
+      <div class="meta">PLATE 15ε.0 — 15ε.2</div>
+    </div>
+
+    <p class="margin-note">Worldbuilding-level reference. <b>No design data, no quantities, no critical-mass values.</b> Only the public-domain physics of energy partition, yield scaling, and the four classical effects (blast, thermal, prompt radiation, fallout). For a fictional military-engineering classroom.</p>
+
+    <div class="grid-2">
+      <div>
+        <h3>Energy Sources</h3>
+        <ul class="tight">
+          <li><b>Fission</b> — heavy nucleus splits, releases ~200 MeV per event.</li>
+          <li><b>Fusion</b> — light nuclei combine; D+T release ~17.6 MeV per event.</li>
+          <li><b>Boosted</b> — fusion neutrons drive higher fission burn-up.</li>
+          <li><b>Two-stage</b> — primary energy compresses a separate fusion stage (Teller-Ulam concept, public physics).</li>
+        </ul>
+        <h3>Yield — the only quantity that matters</h3>
+        <p>Total energy is reported in <b>kilotons</b> (kt) or <b>megatons</b> (Mt) TNT-equivalent.</p>
+        <div class="eq">
+          <div class="eq-label">EQ 15ε.1 · TNT-EQUIVALENT</div>
+          $$ 1\;\text{kt TNT} = 4.184\times10^{12}\;\text{J} $$
+        </div>
+        <h3>Energy Partition (typical)</h3>
+        <table class="tight">
+          <thead><tr><th>Channel</th><th>Fission air-burst</th><th>Thermonuclear</th></tr></thead>
+          <tbody>
+            <tr><td>Blast (shock)</td><td>~50%</td><td>~50%</td></tr>
+            <tr><td>Thermal radiation</td><td>~35%</td><td>~35%</td></tr>
+            <tr><td>Prompt nuclear (n,γ)</td><td>~5%</td><td>~5%</td></tr>
+            <tr><td>Residual / fallout</td><td>~10%</td><td>~10%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Scaling Laws (cube-root)</h3>
+        <div class="eq">
+          <div class="eq-label">EQ 15ε.2 · RANGE FOR FIXED OVERPRESSURE</div>
+          $$ R(Y) = R_{1}\,Y^{1/3} $$
+          <div class="eq-where">Y in kt; same overpressure or thermal flux. 8× yield doubles range, not 8×.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15ε.3 · SCALED DISTANCE</div>
+          $$ Z = R/Y^{1/3}\;[\text{m/kt}^{1/3}] $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15ε.4 · SCALED TIME</div>
+          $$ t \propto Y^{1/3} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15ε.5 · THERMAL FLUENCE</div>
+          $$ Q(R)=\frac{f_{th}\,Y}{4\pi R^{2}}\,\tau_{atm} $$
+          <div class="eq-where">f<sub>th</sub> ≈ 0.35 thermal fraction; τ<sub>atm</sub> atmospheric transmission. Burn / ignition thresholds quoted in cal/cm².</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 15ε.6 · FIREBALL RADIUS (air-burst)</div>
+          $$ R_{fb}\approx 55\,Y^{0.4}\;[\text{m, Y in kt}] $$
+          <div class="eq-where">Public empirical fit (Glasstone). Marks the visible fireball at maximum.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>The Four Classical Effects</h3>
+    <div class="grid-2">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 540 240">
+          <line class="line-cl" x1="20" y1="40" x2="520" y2="40"/>
+          <!-- ground line -->
+          <line class="line" x1="20" y1="200" x2="520" y2="200"/>
+          <!-- burst point -->
+          <circle cx="270" cy="110" r="10" class="fill-warhead"/>
+          <text x="270" y="96" class="lbl-sm" text-anchor="middle">BURST (HoB)</text>
+          <!-- fireball -->
+          <circle cx="270" cy="110" r="34" class="line-thin" fill="none" stroke-dasharray="2 2" stroke="#a02818"/>
+          <!-- thermal -->
+          <g stroke="#a02818" stroke-width="0.5" fill="none" stroke-dasharray="1.5 1.5">
+            <line x1="270" y1="110" x2="180" y2="60"/>
+            <line x1="270" y1="110" x2="360" y2="60"/>
+            <line x1="270" y1="110" x2="160" y2="195"/>
+            <line x1="270" y1="110" x2="380" y2="195"/>
+          </g>
+          <text x="180" y="55" class="lbl-sm" fill="#a02818">THERMAL</text>
+          <!-- blast wave hemisphere -->
+          <path class="line" d="M 80 200 A 190 190 0 0 1 460 200" fill="none"/>
+          <text x="100" y="190" class="lbl-sm">BLAST FRONT</text>
+          <!-- prompt radiation -->
+          <g class="line-thin" stroke="#1a1410" stroke-dasharray="3 2">
+            <circle cx="270" cy="110" r="75" fill="none"/>
+          </g>
+          <text x="330" y="45" class="lbl-sm">PROMPT n, γ</text>
+          <!-- mushroom / fallout -->
+          <path class="line-thin" d="M 250 200 L 250 180 L 230 165 L 230 140 L 220 130 L 250 130 L 280 130 L 290 130 L 310 140 L 310 165 L 290 180 L 290 200" fill="rgba(60,40,20,0.10)"/>
+          <!-- fallout particles -->
+          <g class="fill-deep">
+            <circle cx="330" cy="180" r="1.5"/>
+            <circle cx="360" cy="175" r="1.5"/>
+            <circle cx="395" cy="170" r="1.5"/>
+            <circle cx="425" cy="180" r="1.5"/>
+            <circle cx="455" cy="190" r="1.5"/>
+            <circle cx="480" cy="195" r="1.5"/>
+          </g>
+          <text x="440" y="160" class="lbl-sm">FALLOUT (downwind)</text>
+          <!-- HoB -->
+          <line class="line-thin" x1="270" y1="120" x2="270" y2="200" marker-start="url(#arr)" marker-end="url(#arr)"/>
+          <text x="278" y="160" class="lbl-sm">HoB</text>
+        </svg>
+        <figcaption>FIG 15ε.0 — Air-burst geometry. Height-of-burst (HoB) chosen so blast Mach-stem maximizes overpressure radius for desired effect.</figcaption>
+      </figure>
+      <div>
+        <h4>1. Blast / Shock</h4>
+        <p>Hemispherical pressure wave. <b>Air-burst</b> uses Mach-stem reflection to extend overpressure footprint; <b>surface-burst</b> couples energy into a crater + heavy fallout.</p>
+        <div class="eq">
+          $$ \Delta p_{peak}\propto Y/R^{3}\;(\text{near})\to Y/R\;(\text{far}) $$
+        </div>
+        <h4>2. Thermal Radiation</h4>
+        <p>Two pulses (X-ray-driven first, optical second). Cal/cm² fluence vs. range; line-of-sight only; weather-attenuated.</p>
+        <h4>3. Prompt Nuclear Radiation</h4>
+        <p>Neutrons + gamma in the first ~minute. Range scales weaker than blast — dominant for low-yield, secondary for high-yield where blast outranges.</p>
+        <h4>4. Residual Radiation / Fallout</h4>
+        <p>Surface bursts loft soil into the fireball → activated &amp; condensed particulates. Plume shape set by upper-level winds; activity decays roughly t<sup>-1.2</sup> (Way-Wigner approx.).</p>
+        <div class="eq">
+          $$ I(t)\approx I_{1}\,(t/t_{1})^{-1.2} $$
+        </div>
+      </div>
+    </div>
+
+    <h3>Burst Type vs Mission</h3>
+    <table class="tight">
+      <thead><tr><th>Burst</th><th>HoB</th><th>Effect bias</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>Exo-atmospheric</td><td>&gt; 80 km</td><td>X-ray, EMP</td><td>ABM intercept; HEMP coverage</td></tr>
+        <tr><td>High-altitude</td><td>20–80 km</td><td>EMP, thermal</td><td>Wide-area electronics effect</td></tr>
+        <tr><td>Air-burst</td><td>fireball clear of ground</td><td>Blast (Mach stem), thermal</td><td>Soft area targets, minimal fallout</td></tr>
+        <tr><td>Surface</td><td>ground contact</td><td>Crater, fallout, ground shock</td><td>Hard targets; heavy contamination</td></tr>
+        <tr><td>Sub-surface</td><td>buried</td><td>Ground shock</td><td>Buried hardened targets</td></tr>
+        <tr><td>Underwater</td><td>submerged</td><td>Water shock, base surge</td><td>Naval; localised contamination</td></tr>
+      </tbody>
+    </table>
+
+    <h3>HEMP — High-Altitude EMP</h3>
+    <div class="grid-2">
+      <div>
+        <p>A high-altitude burst's gamma ray flux scatters off air molecules generating Compton electrons; their gyration in Earth's magnetic field produces a coherent broadband transient over a continental footprint.</p>
+        <div class="eq">
+          <div class="eq-label">EQ 15ε.7 · LOS HORIZON FROM HoB</div>
+          $$ R_{los}\approx\sqrt{2 R_{e} h_{b}} $$
+          <div class="eq-where">For h<sub>b</sub> = 400 km → R<sub>los</sub> ≈ 2 200 km radius footprint.</div>
+        </div>
+      </div>
+      <div class="box note">
+        <div class="box-title">⚑ SCALING SHORTCUT</div>
+        For any blast/thermal effect: pick a known reference at Y<sub>1</sub>, R<sub>1</sub>; the same effect at Y<sub>2</sub> occurs at R<sub>2</sub> = R<sub>1</sub>(Y<sub>2</sub>/Y<sub>1</sub>)<sup>1/3</sup>. This single equation, plus the energy-partition table, covers most worldbuilding sizing.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 16 GUIDANCE & FUZING ============ -->
+  <section id="s16">
+    <div class="section-head">
+      <div class="num">§16</div>
+      <h2>Guidance &amp; Fuzing<small>HOMING · INERTIAL · FUZE FAMILIES</small></h2>
+      <div class="meta">PLATE 16.0 — 16.2</div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h3>Guidance Categories</h3>
+        <dl class="keyed">
+          <dt>Command</dt><dd>operator/launcher computes solution and uplinks steering. CLOS, MCLOS, SACLOS variants.</dd>
+          <dt>Beam-rider</dt><dd>missile flies along a radar/laser beam aimed at target.</dd>
+          <dt>Inertial (INS)</dt><dd>onboard accelerometers + gyros integrate position. Drift accumulates.</dd>
+          <dt>Astro / Celestial</dt><dd>star tracker corrects INS over long flight (SLBMs).</dd>
+          <dt>Satellite (GNSS)</dt><dd>position fix from constellation; jam-vulnerable.</dd>
+          <dt>Terrain matching (TERCOM/DSMAC)</dt><dd>radar altimeter or scene match against stored map.</dd>
+          <dt>Active homing</dt><dd>onboard radar transmits + receives. Fire-and-forget.</dd>
+          <dt>Semi-active homing</dt><dd>illuminator on launcher; missile listens for echo.</dd>
+          <dt>Passive homing</dt><dd>seeks emissions: IR (heat), UV, RF (anti-radiation), acoustic.</dd>
+          <dt>Track-via-missile</dt><dd>seeker data downlinked; ground computer steers.</dd>
+          <dt>Image / scene matching</dt><dd>EO seeker locks features (DSMAC, IIR).</dd>
+          <dt>Hybrid / multi-mode</dt><dd>INS+GPS midcourse → IIR or active-RF terminal.</dd>
+        </dl>
+        <h3>Common Laws</h3>
+        <ul class="tight">
+          <li><b>Pursuit</b>: aim straight at target. Curving tail-chase.</li>
+          <li><b>Lead pursuit</b>: aim at predicted point.</li>
+          <li><b>Proportional Navigation (PN)</b>: $\dot\gamma_M = N\,\dot\lambda$. N≈3–5. Optimal vs constant-V target.</li>
+          <li><b>Augmented PN</b>: adds target accel term.</li>
+          <li><b>Optimal / predictive</b>: solves boundary-value problem each cycle.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Fuze Categories</h3>
+        <dl class="keyed">
+          <dt>Impact / contact</dt><dd>crush switch, piezo, inertial. Fires on physical contact.</dd>
+          <dt>Delayed impact</dt><dd>pyrotechnic or electronic delay after first contact (penetrators).</dd>
+          <dt>Proximity (radar/RF)</dt><dd>CW Doppler or pulse — fires at closest approach.</dd>
+          <dt>Optical / laser proximity</dt><dd>retro-reflective ranging — common on AAMs.</dd>
+          <dt>Magnetic</dt><dd>detects ferrous mass (anti-ship, naval mines).</dd>
+          <dt>Acoustic / pressure</dt><dd>sea-mines &amp; depth charges.</dd>
+          <dt>Time / barometric</dt><dd>fixed delay or altitude trigger.</dd>
+          <dt>Command</dt><dd>operator initiates remotely.</dd>
+          <dt>Combination</dt><dd>two or more above; backup &amp; primary.</dd>
+        </dl>
+        <h3>Safe-and-Arm (S&amp;A)</h3>
+        <p>Two independent environmental cues required to arm — typical pairings: setback + spin, setback + acceleration-time integral, water-soluble plug + g-switch. Designed so dropping or jostling the round on the bench cannot arm it.</p>
+        <div class="box note">
+          <div class="box-title">SEEKER FoV / GIMBAL</div>
+          Total seeker look-angle: instantaneous FoV (optic) + gimbal travel. Lock-on-after-launch (LOAL) requires generous gimbal &amp; midcourse accuracy. Lock-on-before-launch (LOBL) is simpler but range-limited.
+        </div>
+        <div class="box dashed">
+          <div class="box-title">COUNTERMEASURE TAXONOMY</div>
+          Flares (IR), chaff (RF), DIRCM (laser dazzle), towed decoys, expendable active decoys, jammers (noise/deception), maneuver. Modern seekers fuse multiple bands &amp; spatial discrimination to reject these.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 16B RF / RADAR / SEEKER MATERIALS ============ -->
+  <section id="s16b">
+    <div class="section-head">
+      <div class="num">§17</div>
+      <h2>RF, Radar &amp; Seeker Hardware<small>BANDS · LINK BUDGET · ANTENNAS · DOME MATERIALS</small></h2>
+      <div class="meta">PLATE 17.0 — 17.4</div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h3>Wavelength &amp; Bands</h3>
+        <div class="eq">
+          <div class="eq-label">EQ 16β.1 · WAVELENGTH</div>
+          $$ \lambda = c/f,\quad c = 3\times10^{8}\text{ m/s} $$
+          <div class="eq-where">1 GHz → 30 cm · 10 GHz → 3 cm · 35 GHz → 8.6 mm · 94 GHz → 3.2 mm.</div>
+        </div>
+        <table class="tight">
+          <thead><tr><th>Band</th><th>Freq.</th><th>λ</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td>HF</td><td>3–30 MHz</td><td>10–100 m</td><td>OTH radar, long-range comms</td></tr>
+            <tr><td>VHF</td><td>30–300 MHz</td><td>1–10 m</td><td>Early-warning, counter-stealth</td></tr>
+            <tr><td>UHF/L</td><td>0.3–2 GHz</td><td>15 cm–1 m</td><td>Surveillance, datalink</td></tr>
+            <tr><td>S</td><td>2–4 GHz</td><td>7.5–15 cm</td><td>Naval search, weather</td></tr>
+            <tr><td>C</td><td>4–8 GHz</td><td>3.7–7.5 cm</td><td>Tracking, satcom</td></tr>
+            <tr><td>X</td><td>8–12 GHz</td><td>2.5–3.7 cm</td><td>Fire-control, AAM seekers</td></tr>
+            <tr><td>Ku</td><td>12–18 GHz</td><td>1.7–2.5 cm</td><td>Datalinks, radar</td></tr>
+            <tr><td>K</td><td>18–27 GHz</td><td>1.1–1.7 cm</td><td>(H₂O absorb. peak ≈22 GHz)</td></tr>
+            <tr><td>Ka</td><td>27–40 GHz</td><td>7.5–11 mm</td><td>Compact seekers, satcom</td></tr>
+            <tr><td>mmW (V/W)</td><td>40–110 GHz</td><td>2.7–7.5 mm</td><td>Proximity fuzes, terminal seek</td></tr>
+            <tr><td>THz</td><td>0.1–10 THz</td><td>30 µm–3 mm</td><td>Imaging research</td></tr>
+          </tbody>
+        </table>
+        <div class="box">
+          <div class="box-title">ATMOSPHERIC WINDOWS</div>
+          Absorption peaks (avoid for long range): H₂O 22 GHz · O₂ 60 GHz · H₂O 183 GHz · O₂ 118 GHz. Windows: 35, 94, 140, 220 GHz.
+        </div>
+      </div>
+      <div>
+        <h3>Choosing Frequency</h3>
+        <div class="eq">
+          <div class="eq-label">EQ 16β.2 · ANTENNA APERTURE GAIN</div>
+          $$ G = \eta_{a}\,\frac{4\pi A}{\lambda^{2}} $$
+          <div class="eq-where">A aperture, η<sub>a</sub> ≈ 0.55–0.7. Doubling f at fixed A → 4× gain. Smaller seekers ⇒ higher band.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16β.3 · BEAMWIDTH</div>
+          $$ \theta_{3dB} \approx \frac{70^{\circ}\,\lambda}{D} $$
+          <div class="eq-where">Higher f or larger D ⇒ narrower beam ⇒ better angular resolution.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16β.4 · FRIIS LINK (COMMS)</div>
+          $$ P_{r} = P_{t}\,G_{t}\,G_{r}\!\left(\frac{\lambda}{4\pi R}\right)^{2} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16β.5 · RADAR RANGE EQUATION</div>
+          $$ R_{max}=\!\left[\frac{P_{t}G^{2}\lambda^{2}\sigma}{(4\pi)^{3} k T_{s} B\,(S/N)\,L}\right]^{1/4} $$
+          <div class="eq-where">σ = target RCS; B = bandwidth; T<sub>s</sub> = system noise temp; L = losses. R ∝ P<sup>¼</sup> — quadrupling power adds only ~41% range.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16β.6 · DOPPLER SHIFT</div>
+          $$ f_{d}=\frac{2 V_{r}}{\lambda} $$
+          <div class="eq-where">Closing rate sensed; basis for proximity-fuze trigger and clutter rejection.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16β.7 · RANGE RES. / PRF</div>
+          $$ \Delta R = \frac{c}{2B},\quad R_{unamb}=\frac{c}{2\,PRF} $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16β.8 · NOISE FLOOR</div>
+          $$ N = k T_{s} B \;[\text{W}],\quad k=1.38\times10^{-23} $$
+        </div>
+      </div>
+    </div>
+
+    <h3>Diagrams</h3>
+    <div class="grid-3">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 140">
+          <line class="line-cl" x1="20" y1="70" x2="240" y2="70"/>
+          <!-- Tx -->
+          <rect x="22" y="58" width="22" height="24" class="fill-deep"/>
+          <text x="33" y="52" class="lbl-sm" text-anchor="middle">Tx</text>
+          <!-- antenna pattern -->
+          <path class="line-thin" d="M 44 70 L 130 50 L 200 60 L 200 80 L 130 90 Z" fill="rgba(60,40,20,0.10)"/>
+          <!-- target -->
+          <circle cx="200" cy="70" r="6" class="fill-warhead"/>
+          <text x="200" y="56" class="lbl-sm" text-anchor="middle">σ</text>
+          <!-- range arrow -->
+          <line class="line-thin" x1="44" y1="105" x2="200" y2="105" marker-start="url(#arr-rev)" marker-end="url(#arr)"/>
+          <text x="122" y="118" class="dim" text-anchor="middle">R</text>
+          <!-- echo -->
+          <g stroke="#a02818" stroke-width="0.6" fill="none" stroke-dasharray="2 2">
+            <path d="M 200 70 Q 120 30, 44 70"/>
+          </g>
+        </svg>
+        <figcaption>FIG 16β.1 — Monostatic radar: P<sub>t</sub> out, σ scatter, P<sub>r</sub> back. Range goes as P<sup>¼</sup>.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 140">
+          <!-- parabolic dish -->
+          <path class="line" d="M 40 30 Q 80 70, 40 110"/>
+          <line class="line-thin" x1="40" y1="70" x2="80" y2="70"/>
+          <circle cx="80" cy="70" r="4" class="fill-deep"/>
+          <text x="60" y="22" class="lbl-sm">DISH</text>
+          <!-- planar array -->
+          <g transform="translate(140,32)">
+            <rect x="0" y="0" width="40" height="76" class="line"/>
+            <g class="fill-deep">
+              <rect x="4" y="4" width="6" height="6"/>
+              <rect x="14" y="4" width="6" height="6"/>
+              <rect x="24" y="4" width="6" height="6"/>
+              <rect x="4" y="14" width="6" height="6"/>
+              <rect x="14" y="14" width="6" height="6"/>
+              <rect x="24" y="14" width="6" height="6"/>
+              <rect x="4" y="24" width="6" height="6"/>
+              <rect x="14" y="24" width="6" height="6"/>
+              <rect x="24" y="24" width="6" height="6"/>
+              <rect x="4" y="34" width="6" height="6"/>
+              <rect x="14" y="34" width="6" height="6"/>
+              <rect x="24" y="34" width="6" height="6"/>
+              <rect x="4" y="44" width="6" height="6"/>
+              <rect x="14" y="44" width="6" height="6"/>
+              <rect x="24" y="44" width="6" height="6"/>
+              <rect x="4" y="54" width="6" height="6"/>
+              <rect x="14" y="54" width="6" height="6"/>
+              <rect x="24" y="54" width="6" height="6"/>
+              <rect x="4" y="64" width="6" height="6"/>
+              <rect x="14" y="64" width="6" height="6"/>
+              <rect x="24" y="64" width="6" height="6"/>
+            </g>
+          </g>
+          <text x="160" y="24" class="lbl-sm" text-anchor="middle">PHASED ARRAY (AESA)</text>
+          <!-- beam -->
+          <g class="line-thin" stroke-dasharray="2 2" fill="none">
+            <path d="M 180 35 L 240 30"/>
+            <path d="M 180 70 L 240 50"/>
+            <path d="M 180 70 L 240 90"/>
+            <path d="M 180 105 L 240 110"/>
+          </g>
+        </svg>
+        <figcaption>FIG 16β.2 — Antennas: parabolic gimbal vs electronically-steered phased array.</figcaption>
+      </figure>
+      <figure class="svg-frame">
+        <svg viewBox="0 0 260 140">
+          <line class="line-cl" x1="20" y1="70" x2="240" y2="70"/>
+          <!-- missile body -->
+          <path class="line" d="M 20 70 C 50 70, 70 60, 90 55 L 200 55 L 215 62 L 215 78 L 200 85 L 90 85 C 70 80, 50 70, 20 70 Z"/>
+          <!-- radome cap -->
+          <path class="fill-soft" d="M 20 70 C 50 70, 70 60, 90 55 L 90 85 C 70 80, 50 70, 20 70 Z" opacity="0.5"/>
+          <text x="50" y="40" class="lbl-sm" text-anchor="middle">RADOME</text>
+          <line class="leader" x1="50" y1="44" x2="55" y2="64"/>
+          <!-- gimbal seeker -->
+          <circle cx="80" cy="70" r="10" class="line-thin" fill="rgba(255,255,255,0.4)"/>
+          <line class="line-thin" x1="70" y1="70" x2="90" y2="70"/>
+          <line class="line-thin" x1="80" y1="60" x2="80" y2="80"/>
+          <text x="80" y="106" class="lbl-sm" text-anchor="middle">SEEKER</text>
+          <!-- electronics -->
+          <rect x="100" y="60" width="20" height="20" class="fill-mid"/>
+          <text x="110" y="106" class="lbl-sm" text-anchor="middle">RX/IF</text>
+          <rect x="125" y="60" width="20" height="20" class="fill-mid"/>
+          <text x="135" y="106" class="lbl-sm" text-anchor="middle">DSP</text>
+          <rect x="150" y="60" width="20" height="20" class="fill-mid"/>
+          <text x="160" y="106" class="lbl-sm" text-anchor="middle">AUTOPILOT</text>
+        </svg>
+        <figcaption>FIG 16β.3 — Seeker chain: radome → antenna/gimbal → RF front-end → DSP → autopilot.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Seeker Modes</h3>
+    <table class="tight">
+      <thead><tr><th>Mode</th><th>Band</th><th>How</th><th>Pros</th><th>Cons</th></tr></thead>
+      <tbody>
+        <tr><td><b>Active radar</b></td><td>X / Ku / Ka</td><td>Onboard Tx + Rx</td><td>Fire-and-forget; all-weather</td><td>Heavy; emits = detectable</td></tr>
+        <tr><td><b>Semi-active</b></td><td>X / Ku</td><td>Listens to launcher's illuminator echo</td><td>Light, sensitive</td><td>Tied to illuminator</td></tr>
+        <tr><td><b>Passive RF / ARM</b></td><td>broad</td><td>Homes on emitter</td><td>Stealthy, long range</td><td>Lost when emitter off</td></tr>
+        <tr><td><b>IR (SWIR)</b></td><td>1–3 µm</td><td>Hot-part imaging</td><td>Engine signature lock</td><td>Solar / cloud limited</td></tr>
+        <tr><td><b>IR (MWIR)</b></td><td>3–5 µm</td><td>Plume + skin</td><td>Best contrast vs sky</td><td>Atm. CO₂ band edges</td></tr>
+        <tr><td><b>IR (LWIR)</b></td><td>8–12 µm</td><td>Body thermal</td><td>Day/night, cold targets</td><td>Lower contrast vs ground</td></tr>
+        <tr><td><b>UV</b></td><td>0.2–0.4 µm</td><td>Solar-blind plume detect</td><td>Low clutter</td><td>Short range</td></tr>
+        <tr><td><b>EO / TV / IIR</b></td><td>vis / IR</td><td>Image correlation</td><td>Aim-point selection</td><td>Weather-limited</td></tr>
+        <tr><td><b>Laser SAL</b></td><td>1.06 / 1.55 µm</td><td>Designator spot</td><td>Precision, jam-resistant</td><td>LOS to designator</td></tr>
+        <tr><td><b>Acoustic / sonar</b></td><td>1–500 kHz</td><td>Pressure transducers</td><td>Underwater only path</td><td>Low resolution</td></tr>
+        <tr><td><b>Magnetic</b></td><td>DC</td><td>Ferromagnetic anomaly</td><td>Sea mines, A/S</td><td>Very short range</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Radome / Window Materials</h3>
+    <table class="tight">
+      <thead><tr><th>Material</th><th>Transparent in</th><th>T<sub>max</sub></th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>Fused silica (SiO₂)</td><td>vis – SWIR; X-band RF</td><td>~1100 °C</td><td>RF radomes, IR domes</td></tr>
+        <tr><td>Pyroceram (LAS glass-ceramic)</td><td>RF L–Ka</td><td>~1200 °C</td><td>High-Mach RF radomes</td></tr>
+        <tr><td>Alumina (Al₂O₃)</td><td>RF, vis, MWIR</td><td>~1700 °C</td><td>RF + thermal-tough radomes</td></tr>
+        <tr><td>Sapphire</td><td>0.2–5 µm; RF</td><td>~1900 °C</td><td>Multi-mode IR/UV/RF</td></tr>
+        <tr><td>Spinel (MgAl₂O₄)</td><td>vis – MWIR</td><td>~1400 °C</td><td>SWIR/MWIR seeker domes</td></tr>
+        <tr><td>ZnS (Cleartran)</td><td>0.4–14 µm</td><td>~250 °C</td><td>LWIR seekers</td></tr>
+        <tr><td>ZnSe</td><td>0.5–18 µm</td><td>~250 °C</td><td>Laser, LWIR optics</td></tr>
+        <tr><td>Ge</td><td>2–14 µm (opaque vis)</td><td>~80 °C softening</td><td>LWIR lenses</td></tr>
+        <tr><td>Si</td><td>1–7 µm</td><td>~250 °C</td><td>SWIR/MWIR optics</td></tr>
+        <tr><td>Diamond / CVD</td><td>vis – LWIR + RF</td><td>&gt; 1500 °C</td><td>Hypersonic multi-band</td></tr>
+        <tr><td>Quartz / silica fabric + resin</td><td>RF</td><td>~500 °C</td><td>Composite radomes</td></tr>
+        <tr><td>Polyimide / PEEK</td><td>RF</td><td>~300 °C</td><td>Light low-Mach radomes</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid-2">
+      <div class="box">
+        <div class="box-title">RADOME RULES</div>
+        <ul class="tight">
+          <li>Wall thickness ≈ λ/2 (or n·λ/2) for low reflection at design band — "half-wave wall".</li>
+          <li>Sandwich (A-/B-/C-sandwich) walls broaden bandwidth.</li>
+          <li>Boresight error: refractive distortion through curved wall — calibrate &amp; subtract.</li>
+          <li>Hypersonic heating &gt; 1000 °C demands ceramic; polymer radomes ablate.</li>
+        </ul>
+      </div>
+      <div class="box note">
+        <div class="box-title">PROXIMITY FUZE — RF</div>
+        Continuous-wave Doppler oscillator on the missile; close-rate causes Doppler beat with reflected signal. Trigger when:
+        $$ V_{r}\to 0 \;(\text{closest approach}) \;\text{ and amplitude} &gt; \text{threshold} $$
+        Typical bands: X, Ku, Ka, 94 GHz mmW. mmW gives narrow lethal-radius control with a tiny antenna (λ ≈ 3 mm).
+      </div>
+    </div>
+
+    <h3>Comms / Datalink</h3>
+    <table class="tight">
+      <thead><tr><th>Link</th><th>Band</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Long-range C2 (sub, OTH)</td><td>VLF/HF</td><td>Ionospheric/sea-water penetration</td></tr>
+        <tr><td>Tactical voice/data</td><td>UHF/L (225–400 MHz, 960–1215)</td><td>LOS, jam-tolerant</td></tr>
+        <tr><td>Wideband datalink</td><td>S/C/X/Ku</td><td>Bandwidth ∝ f; needs LOS</td></tr>
+        <tr><td>Satcom</td><td>L (Iridium), Ku, Ka</td><td>Beyond-LOS, narrow beams</td></tr>
+        <tr><td>Optical / FSO / laser</td><td>1.55 µm</td><td>Huge BW, no RF detect, LOS only</td></tr>
+      </tbody>
+    </table>
+    <div class="eq">
+      <div class="eq-label">EQ 16β.9 · LINK MARGIN (dB)</div>
+      $$ M = P_{t}+G_{t}+G_{r}-L_{fs}-L_{atm}-N - (S/N)_{req} $$
+      $$ L_{fs} = 20\log_{10}\!\left(\frac{4\pi R}{\lambda}\right) $$
+      <div class="eq-where">Build margin ≥ 6 dB; mmW adds rain &amp; O₂ losses (10–30 dB/km in worst window).</div>
+    </div>
+  </section>
+
+  <!-- ============ § 16C ELECTRONIC WARFARE ============ -->
+  <section id="s16c">
+    <div class="section-head">
+      <div class="num">§16γ</div>
+      <h2>EW — ECM / ESM / EMP<small>JAM · LISTEN · PULSE · GENERIC PHYSICS</small></h2>
+      <div class="meta">PLATE 16γ.0 — 16γ.3</div>
+    </div>
+
+    <p class="margin-note">Generic worldbuilding reference. Electronic Warfare divides into <b>ESM</b> (listen), <b>ECM</b> (interfere), <b>ECCM</b> (resist interference), with <b>EMP</b> as a one-shot broadband effect. Quantities below are RF-physics fundamentals.</p>
+
+    <div class="grid-2">
+      <div>
+        <h3>The Three E's</h3>
+        <table class="tight">
+          <thead><tr><th>Discipline</th><th>Verb</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td><b>ESM</b> Electronic Support</td><td>Listen, identify</td><td>Emitter location, library match, threat warn</td></tr>
+            <tr><td><b>ELINT</b></td><td>Catalog</td><td>Long-term emitter parameter database</td></tr>
+            <tr><td><b>SIGINT / COMINT</b></td><td>Decode comms</td><td>Content, traffic patterns</td></tr>
+            <tr><td><b>ECM</b> Electronic Attack</td><td>Jam, deceive, decoy</td><td>Reduced enemy detect / track / lock</td></tr>
+            <tr><td><b>ECCM</b> Counter-counter</td><td>Resist jamming</td><td>Frequency agility, side-lobe nulling</td></tr>
+            <tr><td><b>EMP</b></td><td>Pulse</td><td>Broadband transient → electronics upset/burnout</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Jamming Geometry</h3>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.1 · BURN-THROUGH RANGE</div>
+          $$ R_{bt} = \!\left[\frac{P_{t}G_{t}\sigma}{4\pi}\cdot\frac{B_{j}}{P_{j}G_{j}}\cdot\frac{1}{(S/J)_{req}}\right]^{1/2} $$
+          <div class="eq-where">Range below which radar return exceeds jamming. Quadratic in radar power, linear in jammer power → <em>jammers win at long range.</em></div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.2 · JAM-TO-SIGNAL RATIO</div>
+          $$ \frac{J}{S} = \frac{P_{j}G_{j}}{P_{t}G_{t}}\cdot\frac{4\pi R_{t}^{2}}{\sigma}\cdot\frac{B_{r}}{B_{j}}\cdot\frac{1}{L_{j}/L_{r}} $$
+          <div class="eq-where">B<sub>r</sub>/B<sub>j</sub> = bandwidth ratio penalty for noise jammer that spreads beyond radar BW.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.3 · SUPPORT-JAMMER RANGE ADV</div>
+          $$ R_{bt}^{SJ}=R_{tgt}\!\left[\frac{P_{t}G_{t}\sigma B_{j}}{4\pi P_{j}G_{j}(S/J)R_{j}^{2}B_{r}}\right]^{1/4} $$
+        </div>
+      </div>
+    </div>
+
+    <h3>ECM Techniques</h3>
+    <div class="grid-2">
+      <div>
+        <h4>Noise jamming</h4>
+        <ul class="tight">
+          <li><b>Barrage</b> — wide BW, low spectral density. Easy, weak/Hz.</li>
+          <li><b>Spot</b> — narrow BW, high density. Needs receiver to know f.</li>
+          <li><b>Swept</b> — spot center scans across band.</li>
+          <li><b>Cover-pulse</b> — noise burst around expected return.</li>
+        </ul>
+        <h4>Deception jamming</h4>
+        <ul class="tight">
+          <li><b>RGPO</b> — Range-gate pull-off (delayed echo walks gate away).</li>
+          <li><b>VGPO</b> — Velocity-gate pull-off (Doppler shift drift).</li>
+          <li><b>Inverse-gain</b> — mod amplitude inversely with conscan; drives lock off.</li>
+          <li><b>Cross-eye / cross-pol</b> — phase-front distort → angle error.</li>
+          <li><b>Repeater / DRFM</b> — store &amp; replay with offset → false targets.</li>
+        </ul>
+        <h4>Decoys</h4>
+        <ul class="tight">
+          <li><b>Chaff</b> — λ/2 dipoles; cloud RCS → break lock.</li>
+          <li><b>Flare</b> — IR-spectrum match for IR seekers.</li>
+          <li><b>Towed</b> — fiber-tethered RF repeater.</li>
+          <li><b>Off-board / expendable</b> — MALD-class miniature decoy.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>ECCM responses</h4>
+        <ul class="tight">
+          <li>Frequency agility (pulse-to-pulse hop).</li>
+          <li>PRF jitter / stagger → defeats range-gate dragging.</li>
+          <li>Side-lobe blanking (SLB) &amp; cancellation (SLC).</li>
+          <li>Polarization diversity.</li>
+          <li>Home-on-jam (HOJ) — passive angle on jammer.</li>
+          <li>Adaptive beamforming — null in direction of jammer.</li>
+          <li>Pulse compression with high time-BW → noise floor advantage.</li>
+          <li>Multi-mode (RF + IR + EO) sensor fusion.</li>
+        </ul>
+        <h4>ESM receiver classes</h4>
+        <ul class="tight">
+          <li><b>Crystal-video</b> — wide-open, low sensitivity, low cost.</li>
+          <li><b>Superhet</b> — narrow, high sensitivity, slow scan.</li>
+          <li><b>Channelized</b> — N parallel filters, fast.</li>
+          <li><b>IFM</b> — instantaneous frequency measurement.</li>
+          <li><b>Digital wideband</b> — GHz-wide ADC + FFT.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Geolocation</h3>
+    <div class="grid-2">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 540 220">
+          <line class="line-cl" x1="20" y1="40" x2="520" y2="40"/>
+          <!-- emitter -->
+          <circle cx="360" cy="150" r="6" class="fill-warhead"/>
+          <text x="360" y="170" class="lbl-sm" text-anchor="middle">EMITTER</text>
+          <!-- 3 receivers -->
+          <g class="fill-deep">
+            <rect x="60" y="60" width="14" height="14"/>
+            <rect x="170" y="180" width="14" height="14"/>
+            <rect x="480" y="60" width="14" height="14"/>
+          </g>
+          <text x="67" y="54" class="lbl-sm" text-anchor="middle">Rx1</text>
+          <text x="177" y="210" class="lbl-sm" text-anchor="middle">Rx2</text>
+          <text x="487" y="54" class="lbl-sm" text-anchor="middle">Rx3</text>
+          <!-- AOA lines -->
+          <line class="line-thin" x1="67" y1="74" x2="360" y2="150" stroke-dasharray="3 2"/>
+          <line class="line-thin" x1="177" y1="180" x2="360" y2="150" stroke-dasharray="3 2"/>
+          <line class="line-thin" x1="487" y1="74" x2="360" y2="150" stroke-dasharray="3 2"/>
+          <!-- TDOA hyperbolae sketch -->
+          <path class="line-thin" stroke-dasharray="1.5 2.5" fill="none" stroke="#a02818" d="M 220 40 Q 360 110, 360 200"/>
+          <path class="line-thin" stroke-dasharray="1.5 2.5" fill="none" stroke="#a02818" d="M 80 200 Q 300 130, 520 130"/>
+          <text x="100" y="30" class="lbl-sm" fill="#a02818">TDOA hyperbolae → fix at intersection</text>
+        </svg>
+        <figcaption>FIG 16γ.0 — Multi-platform emitter location: AOA from each Rx, or TDOA hyperbolae intersect at the source.</figcaption>
+      </figure>
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.4 · ANGLE OF ARRIVAL (interferometer)</div>
+          $$ \theta = \sin^{-1}\!\!\left(\frac{\lambda\,\Delta\phi}{2\pi d}\right) $$
+          <div class="eq-where">d baseline; Δφ phase difference. Ambiguity unless d ≤ λ/2 or multi-baseline.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.5 · TDOA</div>
+          $$ R_{i}-R_{j}=c\,\Delta t_{ij} $$
+          <div class="eq-where">Each pair defines a hyperbola; 3 receivers → 2D fix, 4 → 3D.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.6 · FDOA / DOPPLER</div>
+          $$ f_{d,ij}=\frac{f_{0}}{c}\!\left[(\vec v_{i}\cdot\hat r_{i})-(\vec v_{j}\cdot\hat r_{j})\right] $$
+          <div class="eq-where">Moving collectors → frequency difference adds a constraint surface.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>EMP — Generic Pulse Physics</h3>
+    <div class="grid-2">
+      <figure class="svg-frame">
+        <svg viewBox="0 0 480 180">
+          <!-- axes -->
+          <line class="line" x1="40" y1="150" x2="460" y2="150"/>
+          <line class="line" x1="40" y1="20" x2="40" y2="150"/>
+          <text x="460" y="165" class="lbl-sm" text-anchor="end">t</text>
+          <text x="30" y="24" class="lbl-sm" text-anchor="end">E</text>
+          <!-- E1 fast spike -->
+          <path d="M 40 150 L 70 150 L 80 30 L 95 110 L 110 145 L 130 150" class="line" fill="none" stroke="#a02818"/>
+          <text x="110" y="40" class="lbl-sm" fill="#a02818">E1 (ns)</text>
+          <!-- E2 mid -->
+          <path d="M 130 150 Q 200 100, 280 140 L 320 150" class="line" fill="none"/>
+          <text x="230" y="105" class="lbl-sm">E2 (µs–ms)</text>
+          <!-- E3 long slow -->
+          <path d="M 320 150 Q 380 130, 460 145" class="line-thin" fill="none"/>
+          <text x="410" y="125" class="lbl-sm">E3 (s)</text>
+        </svg>
+        <figcaption>FIG 16γ.1 — Generic three-component EMP waveform. E1: ns-rise broadband spike (couples to short cables). E2: lightning-like. E3: long-slow (couples to power grids / long lines).</figcaption>
+      </figure>
+      <div>
+        <h4>Coupling &amp; effects</h4>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.7 · INDUCED VOLTAGE ON A LINE</div>
+          $$ V_{ind}\approx E_{0}\,L_{eff}\;[\text{V}] $$
+          <div class="eq-where">L<sub>eff</sub> ≈ λ/4 of dominant frequency; long lines collect more energy.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.8 · ENERGY THRESHOLD (chip damage)</div>
+          $$ J_{f} = K\,t^{-1/2}\;[\text{W/cm}^{2}\,s^{1/2}] $$
+          <div class="eq-where">Wunsch-Bell: damage flux falls as t<sup>-½</sup>. Faster pulse = lower energy threshold.</div>
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.9 · SHIELDING</div>
+          $$ SE(\text{dB}) = 20\log_{10}\!\frac{E_{out}}{E_{in}} $$
+          <div class="eq-where">Solid metal can: SE = 60–100 dB above 1 MHz. Apertures and cables defeat shielding.</div>
+        </div>
+        <h4>Hardening</h4>
+        <ul class="tight">
+          <li>Faraday-cage enclosure; bond all seams.</li>
+          <li>TVS / MOV / GDT surge devices on every penetration.</li>
+          <li>Shielded twisted-pair, ferrites, common-mode chokes.</li>
+          <li>Fiber-optic between subsystems where possible.</li>
+          <li>Rad-hard / SEU-tolerant logic for nuclear/space environments.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>HPM (High-Power Microwave) — generic</h3>
+    <div class="grid-2">
+      <div>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.10 · FAR-FIELD POWER DENSITY</div>
+          $$ S = \frac{P_{t}G_{t}}{4\pi R^{2}}\;[\text{W/m}^{2}] $$
+        </div>
+        <div class="eq">
+          <div class="eq-label">EQ 16γ.11 · EFFECTIVE RADIATED POWER</div>
+          $$ ERP = P_{t}G_{t} $$
+          <div class="eq-where">Pulsed sources reach GW-class peak ERP for ns to µs; average power small.</div>
+        </div>
+      </div>
+      <div class="box note">
+        <div class="box-title">⚑ EW DESIGN HEURISTIC</div>
+        Three knobs: <b>power</b>, <b>bandwidth</b>, <b>knowledge</b>. A jammer trades any one for the other two — narrow-band &amp; precise frequency knowledge → low power suffices; broad-band brute force needs huge ERP. ESM is what buys you the knowledge.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ § 17 GLOSSARY ============ -->
+  <section id="s17">
+    <div class="section-head">
+      <div class="num">§18</div>
+      <h2>Symbols Glossary<small>NOMENCLATURE · UNITS</small></h2>
+      <div class="meta">PLATE 18.0</div>
+    </div>
+    <div class="cols-3">
+      <dl class="keyed">
+        <dt>α</dt><dd>angle of attack (rad)</dd>
+        <dt>β</dt><dd>sideslip; or √|1−M²|</dd>
+        <dt>γ</dt><dd>flight-path angle; ratio of specific heats</dd>
+        <dt>δ</dt><dd>control-surface deflection</dd>
+        <dt>ε</dt><dd>nozzle expansion ratio Aₑ/A*</dd>
+        <dt>η</dt><dd>efficiency (Oswald, recovery)</dd>
+        <dt>θ</dt><dd>cone half-angle, pitch</dd>
+        <dt>λ</dt><dd>taper ratio cₜ/cᵣ; LOS angle</dd>
+        <dt>Λ</dt><dd>sweep angle</dd>
+        <dt>μ</dt><dd>dynamic viscosity</dd>
+        <dt>ρ</dt><dd>air density (kg/m³)</dd>
+        <dt>σ</dt><dd>stress (Pa)</dd>
+        <dt>τ</dt><dd>shear, time constant</dd>
+        <dt>ω</dt><dd>angular rate</dd>
+        <dt>A*</dt><dd>nozzle throat area</dd>
+        <dt>Aₑ</dt><dd>nozzle exit area</dd>
+        <dt>a</dt><dd>speed of sound</dd>
+        <dt>AR</dt><dd>aspect ratio b²/S</dd>
+        <dt>b</dt><dd>span</dd>
+      </dl>
+      <dl class="keyed">
+        <dt>c, c̄</dt><dd>chord, mean aerodynamic chord</dd>
+        <dt>c*</dt><dd>characteristic velocity</dd>
+        <dt>C<sub>D</sub></dt><dd>drag coefficient</dd>
+        <dt>C<sub>L</sub></dt><dd>lift coefficient</dd>
+        <dt>C<sub>F</sub></dt><dd>thrust coefficient</dd>
+        <dt>C<sub>m</sub></dt><dd>pitching-moment coefficient</dd>
+        <dt>C<sub>p</sub></dt><dd>pressure coefficient</dd>
+        <dt>D</dt><dd>drag (N); diameter</dd>
+        <dt>E</dt><dd>Young's modulus</dd>
+        <dt>F</dt><dd>thrust (N)</dd>
+        <dt>g, g₀</dt><dd>gravity, 9.80665 m/s²</dd>
+        <dt>H</dt><dd>scale height</dd>
+        <dt>I</dt><dd>area moment; mass moment</dd>
+        <dt>I<sub>sp</sub></dt><dd>specific impulse (s)</dd>
+        <dt>L</dt><dd>lift (N); length</dd>
+        <dt>L*</dt><dd>chamber characteristic length</dd>
+        <dt>M</dt><dd>Mach; moment</dd>
+        <dt>m, ṁ</dt><dd>mass; mass flow</dd>
+        <dt>n</dt><dd>load factor; PN gain</dd>
+      </dl>
+      <dl class="keyed">
+        <dt>P, p</dt><dd>pressure; P<sub>c</sub> chamber, P<sub>e</sub> exit, P<sub>a</sub> ambient</dd>
+        <dt>q</dt><dd>dynamic pressure ½ρV²</dd>
+        <dt>R</dt><dd>gas constant; radius; range</dd>
+        <dt>R<sub>n</sub></dt><dd>nose-tip radius</dd>
+        <dt>Re</dt><dd>Reynolds number</dd>
+        <dt>S</dt><dd>reference area</dd>
+        <dt>SM</dt><dd>static margin</dd>
+        <dt>T</dt><dd>thrust; temperature</dd>
+        <dt>T/W</dt><dd>thrust-to-weight ratio</dd>
+        <dt>T₀, T<sub>c</sub></dt><dd>stagnation, chamber temp</dd>
+        <dt>t<sub>b</sub></dt><dd>burn time</dd>
+        <dt>V, V<sub>e</sub></dt><dd>velocity; exhaust velocity</dd>
+        <dt>W</dt><dd>weight (N)</dd>
+        <dt>x<sub>CoP</sub>, x<sub>CoM</sub></dt><dd>centre of pressure / mass</dd>
+        <dt>γ (gas)</dt><dd>c<sub>p</sub>/c<sub>v</sub>; ≈ 1.4 air, 1.2 hot exhaust</dd>
+        <dt>𝓜</dt><dd>molar mass</dd>
+        <dt>ΔV</dt><dd>change in velocity (m/s)</dd>
+        <dt>MR</dt><dd>mass ratio m₀/m<sub>f</sub></dt>
+        <dt>S&amp;A</dt><dd>safe-and-arm device</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ COLOPHON ============ -->
+  <footer class="colophon">
+    <div>
+      <b>FM-OR/14-Δ</b>
+      Field Reference, Vol. I.<br>
+      Compiled in service of fictional<br>
+      worldbuilding. No real-world use.
+    </div>
+    <div>
+      <b>Typeset</b>
+      JetBrains Mono · Special Elite<br>
+      MathJax (TeX) for equations.<br>
+      Diagrams: hand-drawn SVG.
+    </div>
+    <div>
+      <b>Notes</b>
+      All values illustrative.<br>
+      For story design, not engineering.<br>
+      End of document.
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
