@@ -1,0 +1,5 @@
+{
+  "template_folder": "Templates",
+  "templates_folder": "Templates",
+  "trigger_on_file_creation": false
+}
