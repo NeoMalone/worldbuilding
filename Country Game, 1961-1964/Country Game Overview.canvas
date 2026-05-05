@@ -1,0 +1,22 @@
+{
+	"nodes":[
+		{"id":"start","type":"file","file":"00 - Start Here.md","x":0,"y":0,"width":360,"height":220},
+		{"id":"timeline","type":"file","file":"01 - Indexes/Master Timeline.md","x":430,"y":0,"width":360,"height":220},
+		{"id":"gla","type":"file","file":"02 - Countries and Blocs/Golden Lemons Alliance.md","x":0,"y":280,"width":360,"height":220},
+		{"id":"letf","type":"file","file":"02 - Countries and Blocs/Lowest Egyptian Taper Fade (LETF).md","x":430,"y":280,"width":360,"height":220},
+		{"id":"ops","type":"file","file":"01 - Indexes/Operations Index.md","x":860,"y":0,"width":360,"height":220},
+		{"id":"silent","type":"file","file":"05 - Operations/Operation Silent Fade.md","x":860,"y":280,"width":360,"height":220},
+		{"id":"iron","type":"file","file":"05 - Operations/Operation Iron Dawn.md","x":1290,"y":280,"width":360,"height":220},
+		{"id":"collapse","type":"file","file":"08 - Media and Scenes/Final Collapse Dispatch.md","x":1290,"y":0,"width":360,"height":220}
+	],
+	"edges":[
+		{"id":"e1","fromNode":"start","fromSide":"right","toNode":"timeline","toSide":"left"},
+		{"id":"e2","fromNode":"timeline","fromSide":"bottom","toNode":"letf","toSide":"top"},
+		{"id":"e3","fromNode":"start","fromSide":"bottom","toNode":"gla","toSide":"top"},
+		{"id":"e4","fromNode":"gla","fromSide":"right","toNode":"letf","toSide":"left"},
+		{"id":"e5","fromNode":"ops","fromSide":"bottom","toNode":"silent","toSide":"top"},
+		{"id":"e6","fromNode":"silent","fromSide":"right","toNode":"iron","toSide":"left"},
+		{"id":"e7","fromNode":"iron","fromSide":"top","toNode":"collapse","toSide":"bottom"},
+		{"id":"e8","fromNode":"timeline","fromSide":"right","toNode":"ops","toSide":"left"}
+	]
+}
