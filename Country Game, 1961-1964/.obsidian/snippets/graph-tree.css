@@ -1,0 +1,48 @@
+/* Country Game graph styling: tree-like layout, color-coded by folder */
+
+/* Graph view background — soft dark blue for contrast against color groups */
+.graph-view.color-fill {
+  color: #0d1320 !important;
+}
+
+/* Default node text — slightly larger, easier to read */
+.graph-view.color-text {
+  color: #e8e8f0 !important;
+}
+
+/* Node circles — softer fill so color groups pop */
+.graph-view.color-circle {
+  color: #6b7280 !important;
+}
+
+/* Default link line color — dim grey so colored nodes dominate */
+.graph-view.color-line {
+  color: #2a3142 !important;
+}
+
+/* Highlighted link (hover) — bright cyan for visibility */
+.graph-view.color-line-highlight {
+  color: #62d4ff !important;
+}
+
+/* Tag node color */
+.graph-view.color-fill-tag {
+  color: #f1c40f !important;
+}
+
+/* Attachment color */
+.graph-view.color-fill-attachment {
+  color: #95a5a6 !important;
+}
+
+/* Unresolved (broken) link node */
+.graph-view.color-fill-unresolved {
+  color: #4a4a55 !important;
+  opacity: 0.5;
+}
+
+/* Reading view: per-folder accent strip on H1 — also helps when browsing articles */
+.markdown-preview-view h1 {
+  border-bottom: 2px solid var(--text-accent);
+  padding-bottom: 0.3em;
+}

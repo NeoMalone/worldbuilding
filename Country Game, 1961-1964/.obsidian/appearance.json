@@ -1,1 +1,6 @@
-{}
+{
+  "enabledCssSnippets": [
+    "graph-tree"
+  ],
+  "theme": "obsidian"
+}
