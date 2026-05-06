@@ -1,0 +1,28 @@
+.cg-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #111;
+  font-weight: 700;
+  font-size: 0.78em;
+  line-height: 1.6;
+  margin: 0.25rem 0 0.75rem;
+}
+.cg-swatch {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 4px;
+  vertical-align: -0.12rem;
+  margin-right: 0.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+.cg-atlas { background: #FFD166; }
+.cg-faction { background: #118AB2; color: #fff; }
+.cg-cold-war { background: #EF476F; color: #fff; }
+.cg-letf { background: #8338EC; color: #fff; }
+.cg-campaign { background: #F77F00; color: #111; }
+.cg-ideology { background: #06D6A0; color: #111; }
+.cg-technology { background: #4D908E; color: #fff; }
+.cg-timeline { background: #577590; color: #fff; }
+.cg-final { background: #E63946; color: #fff; }

@@ -1,0 +1,225 @@
+{
+  "main": {
+    "id": "7cffe21359bac3fe",
+    "type": "split",
+    "children": [
+      {
+        "id": "a11ee1ad95465bba",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f42367b80ee270c6",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "f7514fc748eaaf31",
+    "type": "split",
+    "children": [
+      {
+        "id": "0d8f0638d92a23cf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "066cc1731191617d",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "2476f5a67f401c37",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "d43d788c5fd411a9",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "5eb147312d42614f",
+    "type": "split",
+    "children": [
+      {
+        "id": "9fdf324ee4af25ac",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5f8607ad67c1bc05",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "7a3c214ce009fc8d",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "02a77e49788df32c",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "23356543fa8d4224",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "c0afb2c6f114788e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "3d-graph:3D Graph": false,
+      "templater-obsidian:Templater": false
+    }
+  },
+  "active": "f42367b80ee270c6",
+  "lastOpenFiles": [
+    "12 Institutions and Alliances/Boombayah Anarchist Party.md",
+    "09 Countries and Territories/Ghana.md",
+    "2026-05-04.md",
+    "15 Action Ledger/1981/Action 0204 - Texts - The Sacred Fade Scrolls, written by Hitler's appointed theologians, ou.md",
+    "10 Operations/Operation Iron Resolve.md",
+    "10 Operations/Operation Jade Fade.md",
+    "10 Operations/Operation Full Fade.md",
+    "10 Operations/Operation Iron Curtain Fade.md",
+    "Operation Condor Strike Continued.md",
+    "13 Technology and Equipment/Dark Angel 12.md",
+    "Pasted image 20260504223808.png",
+    "10 Operations/Operation Sky Shield.md",
+    "06 Technology/SR-91 Phantom Sky.md",
+    "00 Atlas/Maintenance/Stub and Empty Article Index.md",
+    "00 Atlas/Maintenance",
+    "99 Templates/Country Game - Stub Expansion Template.md",
+    "99 Templates/Country Game - Operation Template.md",
+    "99 Templates/Country Game - Full Article Template.md",
+    "99 Templates/Country Game - Territory Template.md",
+    "99 Templates/Country Game - Action Node Template.md",
+    "99 Templates",
+    "Pasted image 20260504223414.png",
+    "_Tools/add_stub_status_and_templater.py",
+    "Untitled 1.canvas",
+    "Untitled.canvas",
+    "15 Action Ledger/1981/Action 0373 - Economic Growth.md",
+    "15 Action Ledger/1981/Action 0372 - Military Strain.md",
+    "15 Action Ledger/1981/Action 0371 - Religious Expansion.md",
+    "15 Action Ledger/1981/Action 0370 - Muslim World.md",
+    "15 Action Ledger/1981/Action 0369 - United Nations.md",
+    "15 Action Ledger/1981/Action 0368 - United States.md",
+    "15 Action Ledger/1981/Action 0367 - Annexation of Iraq.md",
+    "15 Action Ledger/1981/Action 0366 - Fall of Baghdad.md",
+    "15 Action Ledger/1981",
+    "15 Action Ledger/Year Indexes",
+    "15 Action Ledger/Type Indexes",
+    "15 Action Ledger/1984",
+    "15 Action Ledger/1989",
+    "15 Action Ledger/1988",
+    "15 Action Ledger/1987"
+  ]
+}

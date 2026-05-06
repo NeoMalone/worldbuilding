@@ -1,0 +1,86 @@
+{
+  "collapse-filter": true,
+  "search": "",
+  "showTags": true,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "tag:#group/atlas",
+      "color": {
+        "a": 1,
+        "rgb": 16765286
+      }
+    },
+    {
+      "query": "tag:#group/faction",
+      "color": {
+        "a": 1,
+        "rgb": 1149618
+      }
+    },
+    {
+      "query": "tag:#group/cold-war",
+      "color": {
+        "a": 1,
+        "rgb": 15681391
+      }
+    },
+    {
+      "query": "tag:#group/letf-state",
+      "color": {
+        "a": 1,
+        "rgb": 8599788
+      }
+    },
+    {
+      "query": "tag:#group/campaign",
+      "color": {
+        "a": 1,
+        "rgb": 16219904
+      }
+    },
+    {
+      "query": "tag:#group/ideology",
+      "color": {
+        "a": 1,
+        "rgb": 448160
+      }
+    },
+    {
+      "query": "tag:#group/technology",
+      "color": {
+        "a": 1,
+        "rgb": 5083278
+      }
+    },
+    {
+      "query": "tag:#group/timeline",
+      "color": {
+        "a": 1,
+        "rgb": 5731728
+      }
+    },
+    {
+      "query": "tag:#group/final-war",
+      "color": {
+        "a": 1,
+        "rgb": 15087942
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": true,
+  "textFadeMultiplier": -1.6,
+  "nodeSizeMultiplier": 1.2,
+  "lineSizeMultiplier": 1.1,
+  "collapse-forces": false,
+  "centerStrength": 0,
+  "repelStrength": 20,
+  "linkStrength": 0.875,
+  "linkDistance": 500,
+  "scale": 0.02152871844243025,
+  "close": false
+}
